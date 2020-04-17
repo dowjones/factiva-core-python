@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 rootdir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-datadir = os.path.join(rootdir, 'factiva_common/dicts')
+datadir = os.path.join(rootdir, 'dicts')
 ind_hrchy_path = os.path.join(datadir, 'industries-hrchy.csv')
 reg_hrchy_path = os.path.join(datadir, 'regions-hrchy.csv')
 countries_path = os.path.join(datadir, 'factiva-countries.csv')
