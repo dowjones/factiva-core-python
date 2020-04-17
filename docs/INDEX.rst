@@ -1,4 +1,6 @@
-Dow Jones Factiva API Python Library
-####################################
+Dow Jones Factiva Core Python Library
+#####################################
 
-This library makes easier the interaction with some Dow Jones Factiva APIs. Although not all services are covered, it's in constant evolution.
+This package contains fundamental objects shared by other factiva-XXX packages.
+
+This package can also be used directly for handling User instances, or dictionaries.

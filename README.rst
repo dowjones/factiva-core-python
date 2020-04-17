@@ -20,7 +20,7 @@ Create an API-Key user instance, and retrieve a summary of current allowances an
 .. code-block::Python
 
     from factiva.core import APIKeyUser
-    my_user = APIKeyUser(api_key='abc123abc123abc123abc123', get_info=True)
-    if(my_user.remaining_snapshots > 0):
+    my_user = APIKeyUser(api_key='abcd1234abcd1234abcd1234abcd1234', retrieve_info=True)
+    if(my_user.remaining_extractions > 0):
         # Code to capture a snapshot
 
