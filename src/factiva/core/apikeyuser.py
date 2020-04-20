@@ -123,4 +123,6 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
         ret_val = str(self.__class__) + '\n'
         ret_val += f'  api_key = {masked_key}\n'
         ret_val += '\n'.join(('  {} = {}'.format(item, pprop[item]) for item in pprop))
+        ret_val += f'\n  remaining_documents = {self.remaining_documents}\n'
+        ret_val += f'  remaining_extractions = {self.remaining_extractions}\n'
         return ret_val

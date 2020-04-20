@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setup(
     name='factiva-core',
-    version='0.0.2',
+    version='0.0.3',
     description='Python package with root definitions and dictionaries, to support other functional packages.',
     long_description=long_desc,
     long_description_content_type='text/x-rst',
