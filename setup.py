@@ -5,12 +5,13 @@ with open("README.rst", "r") as fh:
 
 setup(
     name='factiva-core',
-    version='0.0.3',
+    version='0.0.4',
     description='Python package with root definitions and dictionaries, to support other functional packages.',
     long_description=long_desc,
     long_description_content_type='text/x-rst',
     author='Miguel Ballesteros',
     author_email='miguel.ballesteros@dowjones.com',
+    # Warning: the folder 'factiva' should NOT have an __init__.py file to avoid conflicts with the same namespace across other packages
     package_dir={'': 'src'},
     packages=find_packages('src'),
     package_data={'': ['*.csv']},
