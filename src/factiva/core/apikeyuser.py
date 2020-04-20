@@ -1,5 +1,5 @@
 import requests
-from factiva.helper import load_environment_value
+from factiva.helper import load_environment_value, mask_string
 from factiva.core import const
 
 
@@ -67,7 +67,17 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
         if request_info is True:
             self.get_info()
         else:
-            self._account_endpoint = None
+            self.account_name = ''
+            self.account_type = ''
+            self.active_products = ''
+            self.max_allowed_concurrent_extractions = 0
+            self.max_allowed_extracted_documents = 0
+            self.max_allowed_extractions = 0
+            self.total_downloaded_bytes = 0
+            self.total_extracted_documents = 0
+            self.total_extractions = 0
+            self.total_stream_subscriptions = 0
+            self.total_stream_topics = 0
 
     @property
     def remaining_extractions(self):
@@ -96,8 +106,21 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
                 self.total_stream_subscriptions = resp_obj['data']['attributes']['tot_subscriptions']
                 self.total_stream_topics = resp_obj['data']['attributes']['tot_topics']
             except Exception:
-                raise AttributeError("Unexpected Account Information API Response.")
+                raise AttributeError('Unexpected Account Information API Response.')
         elif(resp.status_code == 403):
             raise ValueError('Factiva API-Key does not exist or inactive.')
         else:
             raise RuntimeError('Unexpected Account Information API Error')
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        pprop = self.__dict__.copy()
+        del pprop['api_key']
+        masked_key = mask_string(self.__dict__['api_key'])
+
+        ret_val = str(self.__class__) + '\n'
+        ret_val += f'  api_key = {masked_key}\n'
+        ret_val += '\n'.join(('  {} = {}'.format(item, pprop[item]) for item in pprop))
+        return ret_val
