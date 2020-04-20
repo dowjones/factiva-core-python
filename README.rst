@@ -28,6 +28,8 @@ Create an API-Key user instance, and retrieve a summary of current allowances an
     aku = APIKeyUser(api_key='abcd1234abcd1234abcd1234abcd1234', request_info=True)
     print(aku)
 
+.. code-block::
+
     <class 'factiva.core.apikeyuser.APIKeyUser'>
       api_key = ****************************1234
       account_name = Demo Account
@@ -53,6 +55,8 @@ Loads the Industry hierarchy dataset which, among others, contain the Industry F
     from factiva.core import dicts
     ih = dicts.industries_hierarchy()
     ih.head()
+
+.. code-block::
 
     ind_fcode            name   parent
     0   indroot  *DJ Industries
