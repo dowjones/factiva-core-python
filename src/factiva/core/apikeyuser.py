@@ -8,29 +8,31 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
     Class that represents an API user. This entity is identifiable by an API-Key.
     Parameters
     ----------
-    api_key : string that contains the 32-character long APi Key
+    api_key : string that contains the 32-character long APi Key\n
+    request_info : boolean that indicates if user data has to be pulled from the server
     See Also
     --------
     UserOAuth: API user that follows the OAuth guidelines.
     Examples
     --------
     Creating a new API user.
-    >>> ua = UserAPI('abcdefghabcdefghabcdefghabcdefgh')
-    >>> ua
-        {
-            "api_key": "abcdefghabcdefghabcdefghabcdefgh",
-            "cnt_curr_ext": 0,
-            "current_downloaded_amount": 0,
-            "max_allowed_concurrent_extracts": 1,
-            "max_allowed_document_extracts": 2500000,
-            "max_allowed_extracts": 5,
-            "name": "Account Name",
-            "products": "DNA",
-            "tot_document_extracts": 0,
-            "tot_extracts": 0,
-            "tot_subscriptions": 0,
-            "tot_topics": 0
-        }
+    aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234')
+    aku
+        <class 'factiva.core.apikeyuser.APIKeyUser'>
+          api_key = ****************************1234
+          account_name = Demo Account
+          account_type = account_with_limits
+          active_products = Snapshots
+          max_allowed_concurrent_extractions = 2
+          max_allowed_extracted_documents = 100000
+          max_allowed_extractions = 10
+          total_downloaded_bytes = 12345678
+          total_extracted_documents = 5500
+          total_extractions = 2
+          total_stream_subscriptions = 2
+          total_stream_topics = 1
+          remaining_documents = 94500
+          remaining_extractions = 8
     """
 
     __API_ENDPOINT_BASEURL = f'{const.DJ_API_HOST}{const.DJ_API_ACCOUNT_BASEPATH}/'
