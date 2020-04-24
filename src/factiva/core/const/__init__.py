@@ -1,2 +1,14 @@
 DJ_API_HOST = 'https://api.dowjones.com'
+
 DJ_API_ACCOUNT_BASEPATH = '/alpha/accounts'
+
+DJ_API_SNAPSHOTS_BASEPATH = '/alpha/extractions/documents'
+DJ_API_EXPLAIN_SUFFIX = '/_explain'
+DJ_API_ANALYTICS_BASEPATH = '/alpha/analytics'
+
+DJ_API_STREAMS_BASEPATH = '/alpha/streams'
+
+EXPECTED_JOB_STATES = ['JOB_CREATED', 'JOB_QUEUED', 'JOB_STATE_PENDING', 'JOB_VALIDATING',
+                       'JOB_STATE_RUNNING', 'JOB_STATE_DONE', 'JOB_STATE_FAILED', 'JOB_STATE_VALIDATING']
+
+ACTIVE_WAIT_SPACING = 10
