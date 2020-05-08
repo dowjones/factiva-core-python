@@ -15,7 +15,7 @@ def mask_string(raw_str, right_padding=4):
     return raw_str[-right_padding:].rjust(len(raw_str), '*')
 
 
-def api_send_request(method='GET', endpoint_url=const.DJ_API_HOST, headers=None, payload=None, qs_params=None):
+def api_send_request(method='GET', endpoint_url=const.API_HOST, headers=None, payload=None, qs_params=None):
 
     if headers is None:
         raise ValueError('Heders for Factiva requests cannot be empty')
