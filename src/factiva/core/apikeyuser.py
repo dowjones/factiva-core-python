@@ -6,36 +6,64 @@ from factiva.core import const
 class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
     """
     Class that represents an API user. This entity is identifiable by an API-Key.
+
     Parameters
     ----------
-    api_key : string that contains the 32-character long APi Key\n
-    request_info : boolean that indicates if user data has to be pulled from the server
+    api_key : str
+        String containing the 32-character long APi Key. If not provided, the
+        constructor will try to obtain its value from the FACTIVA_APIKEY
+        environment variable.
+    request_info : boolean, optional (Default: False)
+        Indicates if user data has to be pulled from the server. This operation
+        fills account detail properties along with maximum, used and remaining
+        values. It may take several seconds to complete.
+
     See Also
     --------
     UserOAuth: API user that follows the OAuth guidelines.
+
     Examples
     --------
-    Creating a new API user.
-    aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234')
-    aku
-        <class 'factiva.core.apikeyuser.APIKeyUser'>
-          api_key = ****************************1234
-          account_name = Demo Account
-          account_type = account_with_limits
-          active_products = Snapshots
-          max_allowed_concurrent_extractions = 2
-          max_allowed_extracted_documents = 100000
-          max_allowed_extractions = 10
-          total_downloaded_bytes = 12345678
-          total_extracted_documents = 5500
-          total_extractions = 2
-          total_stream_subscriptions = 2
-          total_stream_topics = 1
-          remaining_documents = 94500
-          remaining_extractions = 8
+    Creating a new API user providing the API-Key explicitly and requesting to retrieve the latest account details:
+        >>> aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234', request_info=True)
+        >>> print(aku)
+        (class 'factiva.core.apikeyuser.APIKeyUser')
+            api_key = ****************************1234
+            account_name = Demo Account
+            account_type = account_with_limits
+            active_products = Snapshots
+            max_allowed_concurrent_extractions = 2
+            max_allowed_extracted_documents = 100000
+            max_allowed_extractions = 10
+            total_downloaded_bytes = 12345678
+            total_extracted_documents = 5500
+            total_extractions = 2
+            total_stream_subscriptions = 2
+            total_stream_topics = 1
+            remaining_documents = 94500
+            remaining_extractions = 8
+    Creating a new instance taking the api-key value from the environment varaible FACTIVA_APIKEY, and not requesting any account details.
+        >>> aku = APIKeyUser()
+        >>> print(aku)
+        (class 'factiva.core.apikeyuser.APIKeyUser')
+            api_key = ****************************1234
+            account_name =
+            account_type =
+            active_products =
+            max_allowed_concurrent_extractions = 0
+            max_allowed_extracted_documents = 0
+            max_allowed_extractions = 0
+            total_downloaded_bytes = 0
+            total_extracted_documents = 0
+            total_extractions = 0
+            total_stream_subscriptions = 0
+            total_stream_topics = 0
+            remaining_documents = 0
+            remaining_extractions = 0
+
     """
 
-    __API_ENDPOINT_BASEURL = f'{const.DJ_API_HOST}{const.DJ_API_ACCOUNT_BASEPATH}/'
+    __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
 
     api_key = ''
     account_name = ''
@@ -90,6 +118,52 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
         return self.max_allowed_extracted_documents - self.total_extracted_documents
 
     def get_info(self):
+        """
+        Request the account details to the Factiva Account API Endpoint.
+        This operation can take several seconds to complete.
+
+        Returns
+        -------
+        True if the operation was completed successfully. All returned values
+        are set to the object's properties directly.
+
+        Examples
+        --------
+        >>> aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234')
+        >>> aku
+        (class 'factiva.core.apikeyuser.APIKeyUser')
+            api_key = ****************************1234
+            account_name =
+            account_type =
+            active_products =
+            max_allowed_concurrent_extractions = 0
+            max_allowed_extracted_documents = 0
+            max_allowed_extractions = 0
+            total_downloaded_bytes = 0
+            total_extracted_documents = 0
+            total_extractions = 0
+            total_stream_subscriptions = 0
+            total_stream_topics = 0
+            remaining_documents = 0
+            remaining_extractions = 0
+        >>> aku.get_info()
+        >>> aku
+        (class 'factiva.core.apikeyuser.APIKeyUser')
+            api_key = ****************************1234
+            account_name = Demo Account
+            account_type = account_with_limits
+            active_products = Snapshots
+            max_allowed_concurrent_extractions = 2
+            max_allowed_extracted_documents = 100000
+            max_allowed_extractions = 10
+            total_downloaded_bytes = 12345678
+            total_extracted_documents = 5500
+            total_extractions = 2
+            total_stream_subscriptions = 2
+            total_stream_topics = 1
+            remaining_documents = 94500
+            remaining_extractions = 8
+        """
         account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.api_key}'
         req_head = {'user-key': self.api_key}
         resp = requests.get(account_endpoint, headers=req_head)  # TODO: Consider processing all GET/POST requests in a separate class/module
@@ -113,6 +187,7 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
             raise ValueError('Factiva API-Key does not exist or inactive.')
         else:
             raise RuntimeError('Unexpected Account Information API Error')
+        return True
 
     def __repr__(self):
         return self.__str__()
