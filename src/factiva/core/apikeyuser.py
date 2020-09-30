@@ -192,14 +192,17 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):
+    def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
         pprop = self.__dict__.copy()
         del pprop['api_key']
         masked_key = mask_string(self.__dict__['api_key'])
 
-        ret_val = str(self.__class__) + '\n'
-        ret_val += f'  api_key = {masked_key}\n'
-        ret_val += '\n'.join(('  {} = {}'.format(item, pprop[item]) for item in pprop))
-        ret_val += f'\n  remaining_documents = {self.remaining_documents}\n'
-        ret_val += f'  remaining_extractions = {self.remaining_extractions}\n'
+        ret_val = f'{root_prefix}{str(self.__class__)}\n'
+        ret_val += f'{prefix}api_key = {masked_key}\n'
+        if detailed:
+            ret_val += '\n'.join(('{}{} = {}'.format(prefix, item, pprop[item]) for item in pprop))
+            ret_val += f'\n{prefix}remaining_documents = {self.remaining_documents}\n'
+            ret_val += f'{prefix}remaining_extractions = {self.remaining_extractions}\n'
+        else:
+            ret_val += f'{prefix}...'
         return ret_val
