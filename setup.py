@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setup(
     name='factiva-core',
-    version='0.1.3',
+    version='0.1.5',
     description='Python package with root definitions and dictionaries, to support other functional packages.',
     long_description=long_desc,
     long_description_content_type='text/x-rst',
@@ -43,5 +43,5 @@ setup(
     ],
     keywords='news, news aggregator, risk, compliance, nlp, alternative data',
     python_requires='>=3.5',
-    install_requires=['requests', 'pandas', 'numpy']
+    install_requires=['requests', 'pandas', 'numpy', 'google-cloud-core', 'google-cloud-pubsub'],
 )
