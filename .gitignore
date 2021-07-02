@@ -130,4 +130,6 @@ dmypy.json
 
 # VS Code
 .vscode
+.idea
+.DS_Store
 /distbk

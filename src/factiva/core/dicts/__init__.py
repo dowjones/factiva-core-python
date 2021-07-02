@@ -1,3 +1,4 @@
+"""Define basic dictionaries of Hierarchies adn Taxonomies."""
 import os
 import pandas as pd
 import numpy as np
@@ -10,7 +11,8 @@ countries_path = os.path.join(datadir, 'factiva-countries.csv')
 
 
 def industries_hierarchy() -> pd.DataFrame:
-    """
+    """Read the Dow Jones Industry hierarchy CSV file.
+
     Reads the Dow Jones Industry hierarchy CSV file and returns
     its content as a Pandas DataFrame. The root node has
     the fcode `indroot` and an empty parent.
@@ -24,6 +26,7 @@ def industries_hierarchy() -> pd.DataFrame:
             Name of the Industry
         * parent : string
             Factiva Code of the parent Industry
+
     """
     ret_ind = pd.read_csv(ind_hrchy_path)
     ret_ind = ret_ind.replace(np.nan, '', regex=True)
@@ -31,7 +34,8 @@ def industries_hierarchy() -> pd.DataFrame:
 
 
 def regions_hierarchy() -> pd.DataFrame:
-    """
+    """Read the Dow Jones Regions hierarchy CSV file.
+
     Reads the Dow Jones Regions hierarchy CSV file and returns
     its content as a Pandas DataFrame. The root node has
     the fcode `WORLD` and an empty parent.
@@ -52,6 +56,7 @@ def regions_hierarchy() -> pd.DataFrame:
             Factiva Code of the parent region
         * level : int
             Level number of the node
+
     """
     ret_reg = pd.read_csv(reg_hrchy_path)
     ret_reg = ret_reg.replace(np.nan, '', regex=True)
@@ -59,7 +64,8 @@ def regions_hierarchy() -> pd.DataFrame:
 
 
 def countries_list() -> pd.DataFrame:
-    """
+    """Read a list of official countries.
+
     Reads a list of official countries with several additional fields that
     are helpful in data merges. All contries have the Factiva Code along with
     other identifiers.
@@ -67,6 +73,7 @@ def countries_list() -> pd.DataFrame:
     Returns
     -------
     DataFrame : A Pandas DataFrame
+
     """
     ret_reg = pd.read_csv(countries_path)
     ret_reg['factiva_code'] = ret_reg['factiva_code'].str.lower()
