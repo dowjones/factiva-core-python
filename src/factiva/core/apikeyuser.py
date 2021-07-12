@@ -1,11 +1,13 @@
+"""Factiva Core API Key User Class."""
 import requests
-from factiva.helper import load_environment_value, mask_string
+import pandas as pd
+
+from factiva.helper import load_environment_value, mask_string, api_send_request, flatten_dict
 from factiva.core import const
 
 
-class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
-    """
-    Class that represents an API user. This entity is identifiable by an API-Key.
+class APIKeyUser:  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
+    """Class that represents an API user. This entity is identifiable by an API-Key.
 
     Parameters
     ----------
@@ -62,6 +64,8 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
             remaining_extractions = 0
 
     """
+    # pylint: disable=too-many-instance-attributes
+    # Twelve is reasonable in this case.
 
     __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
 
@@ -78,12 +82,14 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
     total_extractions = 0
     total_stream_subscriptions = 0
     total_stream_topics = 0
+    enabled_company_identifiers = []
 
     def __init__(
         self,
         api_key=None,
         request_info=False
     ):
+        """Construct the instance of the class."""
         if api_key is None:
             try:
                 api_key = load_environment_value('FACTIVA_APIKEY')
@@ -110,18 +116,55 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
             self.total_extractions = 0
             self.total_stream_subscriptions = 0
             self.total_stream_topics = 0
+            self.enabled_company_identifiers = []
 
     @property
     def remaining_extractions(self):
+        """Account remaining extractions."""
         return self.max_allowed_extractions - self.total_extractions
 
     @property
     def remaining_documents(self):
+        """Account remaining documents."""
         return self.max_allowed_extracted_documents - self.total_extracted_documents
 
-    def get_info(self):
+    # [MB] TODO: Please move this method to factiva-news/snapshot/snapshot.py
+    # The number of extractions is OK under this class for account management
+    # information (get_info), but the extraction list belongs to the Snapshot class.
+    def get_extractions(self) -> pd.DataFrame:
+        """Request a list of the extractions of the account.
+
+        Returns
+        -------
+        Dataframe containing the information about the account extractions
+
+        Raises
+        ------
+        - ValueError when the API Key provided is not valid
+        - RuntimeError when the API returns an unexpected error
+
         """
-        Request the account details to the Factiva Account API Endpoint.
+        endpoint = f'{const.API_HOST}{const.API_EXTRACTIONS_BASEPATH}'
+
+        headers_dict = {'user-key': self.api_key}
+
+        response = api_send_request(method='GET', endpoint_url=endpoint, headers=headers_dict)
+
+        if response.status_code != 200:
+            if response.status_code == 403:
+                raise ValueError('Factiva API-Key does not exist or inactive.')
+
+            raise RuntimeError(f'Unexpected API Error with message: {response.text}')
+
+        response_data = response.json()
+
+        extraction_list = [flatten_dict(extraction) for extraction in response_data['data']]
+
+        return pd.DataFrame(extraction_list)
+
+    def get_info(self):
+        """Request the account details to the Factiva Account API Endpoint.
+
         This operation can take several seconds to complete.
 
         Returns
@@ -165,11 +208,12 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
             total_stream_topics = 1
             remaining_documents = 94500
             remaining_extractions = 8
+
         """
         account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.api_key}'
         req_head = {'user-key': self.api_key}
         resp = requests.get(account_endpoint, headers=req_head)  # TODO: Consider processing all GET/POST requests in a separate class/module
-        if(resp.status_code == 200):
+        if resp.status_code == 200:
             try:
                 resp_obj = eval(resp.text)
                 self.account_name = resp_obj['data']['attributes']['name']
@@ -184,9 +228,10 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
                 self.total_extractions = resp_obj['data']['attributes']['tot_extracts']
                 self.total_stream_subscriptions = resp_obj['data']['attributes']['tot_subscriptions']
                 self.total_stream_topics = resp_obj['data']['attributes']['tot_topics']
+                self.enabled_company_identifiers = resp_obj['data']['attributes']['enabled_company_identifiers']
             except Exception:
                 raise AttributeError('Unexpected Account Information API Response.')
-        elif(resp.status_code == 403):
+        elif resp.status_code == 403:
             raise ValueError('Factiva API-Key does not exist or inactive.')
         else:
             raise RuntimeError('Unexpected Account Information API Error')
@@ -199,6 +244,7 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
             return property_value
 
     def __repr__(self):
+        """Return a string representation of the object."""
         return self.__str__()
 
     def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
@@ -215,3 +261,43 @@ class APIKeyUser(object):  # TODO: Create a DJUserBase class that defines root p
         else:
             ret_val += f'{prefix}...'
         return ret_val
+
+    @staticmethod
+    def create_api_user(api_user, request_userinfo):
+        """Determine the way to initialize an api key user according to the type of parameter provided.
+
+        Parameters
+        ----------
+        api_user: None, str or APIKeyUser.
+                Source to create an instance of APIKeyUser
+        request_userinfo
+                Indicates if user data has to be pulled from the server
+
+        Returns
+        -------
+        APIKeyUser instance accordingly:
+            - When None is passed, APIKeyUser instance using credentials from ENV variables
+            - When str is passed, APIKeyUser instance using the provided parameter as credentials
+            - When ApiKeyUser is passed, this same instance is returned
+
+        Raises
+        ------
+            RuntimeError: When an APIKeyUser instance cannot be created using the provided argument
+
+        """
+        if isinstance(api_user, APIKeyUser):
+            return api_user
+
+        if isinstance(api_user, str):
+            try:
+                return APIKeyUser(api_user, request_info=request_userinfo)
+            except Exception:
+                raise RuntimeError("User cannot be obtained from the provided key.")
+
+        if api_user is None:
+            try:
+                return APIKeyUser(request_info=request_userinfo)
+            except Exception:
+                raise RuntimeError("User cannot be obtained from ENV variables")
+
+        raise RuntimeError("Unexpected api_user value")

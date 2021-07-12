@@ -1,9 +1,11 @@
 Dow Jones Factiva Core Python Library
 #####################################
+ .. image:: https://github.com/wizeline/factiva-core-python/actions/workflows/dev_branch_linting.yml/badge.svg
 
 Python package with root definitions and dictionaries, to support other functional packages.
 
 * **APIKeyUser**: Represents an API user defined as a user key only (no O-Auth).
+* **StreamUser**: Represents an user used for Streams which can authenticate with a user key.
 * **Dicts**: Module that contains mulitple dictionaries for data combination or better human-reading.
 
 Installation
@@ -64,3 +66,31 @@ Loads the Industry hierarchy dataset which, among others, contain the Industry F
     2    i01001         Farming       i0
     3    i03001     Aquaculture   i01001
     4  i0100144   Cocoa Growing   i01001
+
+Creating a StreamUser
+----------------------------------
+Enables a user with a user-key to consult all the streams which have been done by its account
+Authenticates for Streams API (O-Auth or user-key)
+Creates Cient for Pubsub
+
+.. code-block:: python
+
+    from factiva.core import StreamUser
+    stream_user = StreamUser(
+        api_key='****************************1234',
+        request_info=False
+    )
+
+.. code-block::
+
+    print(stream_user.get_streams())
+    print(stream_user.get_client_subscription())
+
+.. code-block::
+
+        type                                                 id  ...                                      relationships                                              links
+    0   stream  dj-synhub-stream-****************************1234...  ...   {'subscriptions': {'data': []}}  {'self': 'https://api.dowjones.com/alpha/strea...
+    1   stream  dj-synhub-stream-****************************1234...  ...   {'subscriptions': {'data': []}}  {'self': 'https://api.dowjones.com/alpha/strea...
+        
+    <google.cloud.pubsub_v1.SubscriberClient object at 0x7fd36df36df0>
+
