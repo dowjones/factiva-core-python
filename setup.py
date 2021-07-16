@@ -17,8 +17,8 @@ setup(
     description='Python package with root definitions and dictionaries, to support other functional packages.',
     long_description=long_desc,
     long_description_content_type='text/x-rst',
-    author='Miguel Ballesteros',
-    author_email='miguel.ballesteros@dowjones.com',
+    author='Dow Jones Customer Engineers',
+    author_email='customer.solutions@dowjones.com',
     # Warning: the folder 'factiva' should NOT have an __init__.py file to avoid conflicts with the same namespace across other packages
     package_dir={'': 'src'},
     packages=['factiva.core', 'factiva.helper', 'factiva.core.dicts', 'factiva.core.const'],
