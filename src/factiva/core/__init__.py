@@ -1,14 +1,11 @@
 """Implement core capabilities for classes."""
-__all__ = ['const', 'dicts']
+from .__version__ import __version__
 
-from factiva.core.apikeyuser import (
-    APIKeyUser
-)
+from .apikeyuser import (APIKeyUser)
 
-from factiva.core.streamuser import (
-    StreamUser
-)
+from .streamuser import (StreamUser)
 
-from factiva.core.stream_response import (
-    StreamResponse
-)
+from .stream_response import (StreamResponse)
+
+__all__ = [APIKeyUser, StreamUser, StreamResponse, 'const', 'dicts', ]
+version = __version__
