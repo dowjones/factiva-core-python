@@ -1,6 +1,7 @@
 Dow Jones Factiva Core Python Library
 #####################################
- .. image:: https://github.com/wizeline/factiva-core-python/actions/workflows/dev_branch_linting.yml/badge.svg
+.. image:: https://github.com/dowjones/factiva-core-python/actions/workflows/dev_branch_linting_testing.yml/badge.svg
+.. image:: https://readthedocs.org/projects/factiva-core-python/badge/?version=latest:target: https://factiva-core-python.readthedocs.io/en/latest/?badge=latest:alt: Documentation Status
 
 Python package with root definitions and dictionaries, to support other functional packages.
 
