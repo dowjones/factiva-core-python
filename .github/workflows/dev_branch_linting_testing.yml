@@ -1,7 +1,9 @@
-name: "RDL CI/CD workflow for Development branch"
+name: "DEV Test and Build"
 
 on:
   push:
+    branches:
+      - dev
 
 env:
   ENVIRONMENT_USER_KEY: ${{secrets.ENVIRONMENT_USER_KEY}}
