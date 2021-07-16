@@ -12,8 +12,10 @@
 #
 import os
 import sys
+from factiva.core.__version__ import __version__
 sys.path.insert(0, os.path.abspath('../../src'))
 sys.path.insert(0, os.path.abspath('../../src/factiva'))
+sys.path.insert(0, os.path.abspath('../../src/factiva/core'))
 
 
 # -- Project information -----------------------------------------------------
@@ -23,8 +25,8 @@ copyright = '2021, Dow Jones'
 author = 'Dow Jones'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
-
+release = __version__
+version = __version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -43,6 +45,8 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Master Doc name
+master_doc = 'index'
 
 # -- Options for HTML output -------------------------------------------------
 
