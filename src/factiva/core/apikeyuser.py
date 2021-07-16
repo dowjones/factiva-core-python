@@ -1,4 +1,5 @@
 """Factiva Core API Key User Class."""
+
 import requests
 import pandas as pd
 
@@ -237,11 +238,12 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
             raise RuntimeError('Unexpected Account Information API Error')
         return True
 
-    def __print_property__(self, property_value):
-        if(type(property_value) == int):
-            return f'{property_value:,d}'
+    def __print_property__(self, property_value) -> str:
+        if type(property_value) == int:
+            pval = f'{property_value:,d}'
         else:
-            return property_value
+            pval = property_value
+        return pval
 
     def __repr__(self):
         """Return a string representation of the object."""
