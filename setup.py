@@ -3,9 +3,17 @@ from setuptools import setup
 with open("README.rst", "r") as fh:
     long_desc = fh.read()
 
+with open('src/factiva/core/__version__.py') as f:
+    for line in f:
+        if line.find("__version__") >= 0:
+            version = line.split("=")[1].strip()
+            version = version.strip('"')
+            version = version.strip("'")
+            continue
+
 setup(
     name='factiva-core',
-    version='0.1.4',
+    version=version,
     description='Python package with root definitions and dictionaries, to support other functional packages.',
     long_description=long_desc,
     long_description_content_type='text/x-rst',
@@ -35,13 +43,11 @@ setup(
 
         'License :: OSI Approved :: MIT License',
 
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
     keywords='news, news aggregator, risk, compliance, nlp, alternative data',
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     install_requires=['requests', 'pandas', 'numpy', 'google-cloud-core', 'google-cloud-pubsub'],
 )
