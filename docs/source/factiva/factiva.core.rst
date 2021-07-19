@@ -1,5 +1,5 @@
-Core Package
-################
+Core
+####
 
 Subpackages
 ***********
@@ -14,15 +14,14 @@ Submodules
 **********
 
 APIKeyUser
-------------------------------
+----------
 
 .. autoclass:: factiva.core.APIKeyUser
-   :members:
    :undoc-members:
    :show-inheritance:
 
 StreamUser
-------------------------------
+----------
 
 .. autoclass:: factiva.core.StreamUser
    :undoc-members:
