@@ -1,4 +1,4 @@
-name: "Test and Build"
+name: "Test, Build and Publish"
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
   #          pylama -l "pylint,pycodestyle,pydocstyle" -i "W,C0301,E501,D213,D203,E0401,D204" ./src/
 
   test:
-    name: Testing RDL using pytest
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,31 +67,34 @@ jobs:
         run: |
           python -m pip install pytest pytest-cov requests pandas numpy google-cloud-core google-cloud-pubsub fastavro unittest2
 
-      - name: checkout DowJones Factiva News repository
-        uses: actions/checkout@v2
-        with:
-          repository: 'wizeline/factiva-news-python'
-          ref: 'development'
-          path: 'main'
+      # - name: Checkout repository
+      #   uses: actions/checkout@v2
+      #   with:
+          # repository: 'dowjones/factiva-core-python'
+          # ref: 'master'
+          # path: 'main'
 
-      - name: Directory Listing & copy directories
-        run: |
-          cp -R ./main/src/factiva/news ./src/factiva/
+      # - name: Directory Listing & copy directories
+      #   run: |
+      #     cp -R ./main/src/factiva/core ./src/factiva/
 
-      - name: unittest
-        run: |
-          export PYTHONPATH="${PYTHONPATH}:./src/"
-          python -m unittest test/test_unit_*
+      # - name: unittest
+      #   run: |
+      #     export PYTHONPATH="${PYTHONPATH}:./src/"
+      #     python -m unittest test/test_unit_*
 
       - name: pytest
-        run: |
-          export PYTHONPATH="${PYTHONPATH}:./src/"
-          pytest --cov=./src test/
+        run: pytest test/
+
+      # - name: pytest
+      #   run: |
+      #     export PYTHONPATH="${PYTHONPATH}:./src/"
+      #     pytest --cov=./src test/
 
   build:
-      name: Building RDL
+      name: Build & Publish
       runs-on: ubuntu-latest
-      needs: [linting, testing]
+      needs: [test]
       steps:
         - name : Checkout code
           uses : actions/checkout@v2
@@ -115,7 +118,7 @@ jobs:
             name: Wheel_library
             path: dist/
 
-        - name: Publish package to TestPyPI
+        - name: Publish package to Public PyPI
           uses: pypa/gh-action-pypi-publish@release/v1
           with:
             user: __token__

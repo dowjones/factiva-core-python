@@ -1,4 +1,4 @@
-name: "DEV Test and Build"
+name: "DEV - Test, Build and Publish"
 
 on:
   push:
@@ -54,13 +54,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: 'dev'
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
 
-      - name: Install latest pip, setuptools, twine + wheel
+      - name: Install latest pip
         run: |
           python -m pip install --upgrade pip
 
@@ -68,26 +70,24 @@ jobs:
         run: |
           python -m pip install pytest pytest-cov requests pandas numpy google-cloud-core google-cloud-pubsub fastavro unittest2
 
-      - name: checkout DowJones Factiva News repository
-        uses: actions/checkout@v2
-        with:
-          repository: 'wizeline/factiva-news-python'
-          ref: 'development'
-          path: 'main'
+      # - name: Checkout repository
+      #   uses: actions/checkout@v2
+          # path: 'main'
 
-      - name: Directory Listing & copy directories
-        run: |
-          cp -R ./main/src/factiva/news ./src/factiva/
+      # - name: Directory Listing & copy directories
+      #   run: |
+      #     cp -R ./main/src/factiva/core ./src/factiva/
 
-      - name: unittest
-        run: |
-          export PYTHONPATH="${PYTHONPATH}:./src/"
-          python -m unittest test/test_unit_*
+      # - name: unittest
+      #   run: |
+      #     export PYTHONPATH="${PYTHONPATH}:./src/"
+      #     python -m unittest test/test_unit_*
 
       - name: pytest
-        run: |
-          export PYTHONPATH="${PYTHONPATH}:./src/"
-          pytest --cov=./src test/
+        run: pytest test/
+        # run: |
+        #   export PYTHONPATH="${PYTHONPATH}:./src/"
+        #   pytest --cov=./src test/
           
   build:
       name: Build & Publish
@@ -96,6 +96,8 @@ jobs:
       steps:
         - name : Checkout code
           uses : actions/checkout@v2
+          with:
+            ref: 'dev'
 
         - name: Set up Python
           uses: actions/setup-python@v2
