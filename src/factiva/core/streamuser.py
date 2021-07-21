@@ -7,12 +7,13 @@ from google.cloud.pubsub_v1 import SubscriberClient
 from google.oauth2 import service_account
 
 from factiva.core import const, APIKeyUser
-from factiva.helper import load_environment_value, api_send_request
+from factiva.helper import api_send_request
 from .stream_response import StreamResponse
 
 
 class StreamUser(APIKeyUser):
-    """Implement the class that represents an Stream user.
+    """
+    Implements the class that represents an Stream user.
 
     This entity is an extension from the APIKeyUser class.
     This class is capable of consulting the list streams from a given user
@@ -22,7 +23,7 @@ class StreamUser(APIKeyUser):
     Parameters
     ----------
     api_key : str
-    String containing the 32-character long APi Key. If not provided, the
+        String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_APIKEY
         environment variable.
     request_info : boolean, optional (Default: False)
@@ -30,20 +31,21 @@ class StreamUser(APIKeyUser):
         This operation fills account detail properties along with maximum,
         used and remaining values. It may take several seconds to complete.
 
-
     See Also
     --------
-    UserOAuth: API user that follows the OAuth guidelines.
+    UserOAuth : API user that follows the OAuth guidelines.
 
     Examples
     --------
-    stream_user = StreamUser(
-        api_key='****************************1234',
-        request_info=False
-    )
-    print(stream_user.get_streams())
+    Creates a new stream user.
+        >>> stream_user = StreamUser(
+                api_key='abcd1234abcd1234abcd1234abcd1234',
+                request_info=False
+            )
+            print(stream_user.get_streams())
 
     """
+
     __API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH
     __DEFAULT_HOST_DNA = f'{const.API_HOST}{const.DNA_BASEPATH}'
     __DEFAULT_HOST_ALPHA = f'{const.API_HOST}{const.ALPHA_BASEPATH}'
@@ -97,7 +99,7 @@ class StreamUser(APIKeyUser):
         else:
             raise RuntimeError('Unexpected Get Streams API Error')
 
-    def fetch_credentials(self) -> {}:
+    def fetch_credentials(self) -> dict:
         """Fetch the current headers and uri (v1 or v2).
 
         Then it is executed a call to an api with the given header and uri
@@ -150,7 +152,7 @@ class StreamUser(APIKeyUser):
         Raises
         ------
         ValueError: When the headers doesn't have
-        OAuth credentials or user key
+            OAuth credentials or user key
 
         """
         headers = self.get_authentication_headers()
@@ -198,7 +200,7 @@ class StreamUser(APIKeyUser):
                 '''
             )
 
-    def get_authentication_headers(self) -> {}:
+    def get_authentication_headers(self) -> dict:
         """Obtain the current auhtentication headers.
 
         The headers are the user-key

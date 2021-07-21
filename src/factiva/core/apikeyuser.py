@@ -1,4 +1,5 @@
 """Factiva Core API Key User Class."""
+
 import requests
 import pandas as pd
 
@@ -76,6 +77,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
     max_allowed_concurrent_extractions = 0
     max_allowed_extracted_documents = 0
     max_allowed_extractions = 0
+    currently_running_extractions = 0
     total_downloaded_bytes = 0
     total_extracted_documents = 0
     total_extractions = 0
@@ -109,6 +111,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
             self.max_allowed_concurrent_extractions = 0
             self.max_allowed_extracted_documents = 0
             self.max_allowed_extractions = 0
+            self.currently_running_extractions = 0
             self.total_downloaded_bytes = 0
             self.total_extracted_documents = 0
             self.total_extractions = 0
@@ -220,6 +223,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
                 self.max_allowed_concurrent_extractions = resp_obj['data']['attributes']['max_allowed_concurrent_extracts']
                 self.max_allowed_extracted_documents = resp_obj['data']['attributes']['max_allowed_document_extracts']
                 self.max_allowed_extractions = resp_obj['data']['attributes']['max_allowed_extracts']
+                self.currently_running_extractions = resp_obj['data']['attributes']['cnt_curr_ext']
                 self.total_downloaded_bytes = resp_obj['data']['attributes']['current_downloaded_amount']
                 self.total_extracted_documents = resp_obj['data']['attributes']['tot_document_extracts']
                 self.total_extractions = resp_obj['data']['attributes']['tot_extracts']
@@ -234,21 +238,30 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
             raise RuntimeError('Unexpected Account Information API Error')
         return True
 
+    def __print_property__(self, property_value) -> str:
+        if type(property_value) == int:
+            pval = f'{property_value:,d}'
+        else:
+            pval = property_value
+        return pval
+
     def __repr__(self):
         """Return a string representation of the object."""
         return self.__str__()
 
-    def __str__(self):
-        """Return a string representation of the object."""
+    def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
         pprop = self.__dict__.copy()
         del pprop['api_key']
         masked_key = mask_string(self.__dict__['api_key'])
 
-        ret_val = str(self.__class__) + '\n'
-        ret_val += f'  api_key = {masked_key}\n'
-        ret_val += '\n'.join(('  {} = {}'.format(item, pprop[item]) for item in pprop))
-        ret_val += f'\n  remaining_documents = {self.remaining_documents}\n'
-        ret_val += f'  remaining_extractions = {self.remaining_extractions}\n'
+        ret_val = f'{root_prefix}{str(self.__class__)}\n'
+        ret_val += f'{prefix}api_key = {masked_key}\n'
+        if detailed:
+            ret_val += '\n'.join((f'{prefix}{item} = {self.__print_property__(pprop[item])}' for item in pprop))
+            ret_val += f'\n{prefix}remaining_documents = {self.__print_property__(self.remaining_documents)}\n'
+            ret_val += f'{prefix}remaining_extractions = {self.__print_property__(self.remaining_extractions)}\n'
+        else:
+            ret_val += f'{prefix}...'
         return ret_val
 
     @staticmethod

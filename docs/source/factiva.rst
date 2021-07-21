@@ -1,8 +1,11 @@
 Factiva
 =======
+Factiva namespace which is shared across all packages.
+
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
-   factiva.core
-   factiva.helper
+   factiva/factiva.core
+   factiva/factiva.core.const
+   factiva/factiva.core.dicts
