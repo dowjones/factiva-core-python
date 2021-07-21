@@ -51,7 +51,6 @@ DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 # }
 
 
-
 def check_apikeyuser_types(aku):
     aku = APIKeyUser(request_info=True)
     assert type(aku.api_key) == str
@@ -69,6 +68,7 @@ def check_apikeyuser_types(aku):
     assert type(aku.total_stream_topics) == int
     assert type(aku.enabled_company_identifiers) == list
 
+
 def test_apikeyuser_with_request_info():
     # Creates the object using the ENV variable and request the usage details to the API service
     aku = APIKeyUser(request_info=True)
@@ -76,6 +76,7 @@ def test_apikeyuser_with_request_info():
     assert aku.api_key == FACTIVA_APIKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
+
 
 def test_apikeyuser_without_info():
     # Creates an empty object from the ENV variable with a value only for the api_key property
@@ -85,6 +86,7 @@ def test_apikeyuser_without_info():
     assert len(aku.account_name) == 0
     assert len(aku.active_products) == 0
 
+
 def test_user_with_parameter_and_info():
     # API Key is passed as a string and request_info=True
     aku = APIKeyUser(api_key=FACTIVA_APIKEY, request_info=True)
@@ -92,6 +94,7 @@ def test_user_with_parameter_and_info():
     assert aku.api_key == FACTIVA_APIKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
+
 
 # Creates an empty object from the provided string with a value only for the api_key property
 def test_user_with_parameter_without_info():
@@ -101,11 +104,13 @@ def test_user_with_parameter_without_info():
     assert aku.account_name == ''
     assert aku.active_products == ''
 
+
 def test_invalid_key():
     # Creates an object from the provided string and request the usage details to the API service
     # The key is invalid and this should validate how the error is processed
     with pytest.raises(ValueError, match=r'Factiva API-Key does not exist or inactive.'):
         aku = APIKeyUser(DUMMY_KEY, request_info=True)
+
 
 def test_invald_lenght_key():
     # Attempts to create an object with malformed keys. This requires assert the raised exception.

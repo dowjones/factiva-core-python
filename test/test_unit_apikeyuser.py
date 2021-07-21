@@ -5,6 +5,7 @@ from factiva.helper import load_environment_value
 FACTIVA_APIKEY = load_environment_value("FACTIVA_APIKEY")
 DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 
+
 class TestAPIKeyUser(unittest.TestCase):
 
     def test_create_user_with_env_key(self):
