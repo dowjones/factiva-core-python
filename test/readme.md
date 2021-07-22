@@ -4,7 +4,6 @@ General notes that describe the context the package is expected to be tested, an
 ## Environment Variables
 Before starting the test, set the following enviroment variables with values like this:
 ```
-FACTIVA_APIKEY='abcd1234abcd1234abcd1234abcd1234'
+FACTIVA_USERKEY='abcd1234abcd1234abcd1234abcd1234'
 FACTIVA_CLIENT_EMAIL='dummy-account@djproject.iam.gserviceaccount.com'
 ```
-
