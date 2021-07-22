@@ -6,10 +6,8 @@ on:
       - dev
 
 env:
-  ENVIRONMENT_USER_KEY: ${{secrets.ENVIRONMENT_USER_KEY}}
-  FACTIVA_APIKEY: ${{secrets.ENVIRONMENT_USER_KEY}}
+  FACTIVA_USERKEY: ${{secrets.FACTIVA_USERKEY}}
   FACTIVA_CLIENT_EMAIL: ${{secrets.FACTIVA_CLIENT_EMAIL}}
-  
 
 jobs:
   # linting:
