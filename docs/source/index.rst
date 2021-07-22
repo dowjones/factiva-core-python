@@ -19,4 +19,6 @@ Check out the `Dow Jones Developer Platofrm site <https://developer.dowjones.com
    :caption: Package Reference
    :glob:
 
-   factiva
+   factiva.core/auth
+   factiva.core/const
+   factiva.core/dicts

@@ -20,8 +20,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
     Examples
     --------
-    Creating a new UserKey instance providing the user_key string explicitly
-    and requesting to retrieve the latest account details:
+    Creating a new UserKey instance providing the user_key string explicitly and requesting to retrieve the latest account details:
         >>> u = UserKey('abcd1234abcd1234abcd1234abcd1234', stats=True)
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
@@ -43,8 +42,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             |-remaining_documents = 197,485
             |-remaining_extractions = 2
 
-    Creating a new instance taking the user_key value from the environment
-    varaible FACTIVA_USERKEY, and not requesting account statistics (default).
+    Creating a new instance taking the user_key value from the environment varaible FACTIVA_USERKEY, and not requesting account statistics (default).
         >>> u = UserKey()
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
