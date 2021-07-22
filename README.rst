@@ -3,7 +3,7 @@ Dow Jones Factiva Core Python Library
 .. image:: https://github.com/dowjones/factiva-core-python/actions/workflows/master_test_publish.yml/badge.svg
 .. image:: https://readthedocs.org/projects/factiva-core-python/badge/?version=latest :target: https://factiva-core-python.readthedocs.io/en/latest/?badge=latest :alt: Documentation Status
 
-Python package with root definitions and dictionaries, to support other functional packages.
+Python package with root definitions and dictionaries, to support other functional packages. Get more details in the `official documentation <https://factiva-core-python.readthedocs.io/>`_
 
 * **UserKey**: Represents an API user defined as a user key only (no O-Auth). This class is used in the Snapshots & Streams services
 * **Dicts**: Module that contains mulitple dictionaries for data combination or better human-reading.
