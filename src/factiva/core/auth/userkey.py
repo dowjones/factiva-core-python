@@ -25,7 +25,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
             |-user_key = ****************************1234
-            |-cloud_token = **********************YKB22sJCkHXX
+            |-cloud_token = **Not Fetched**
             |-account_name = AccName1234
             |-account_type = account_with_contract_limits
             |-active_products = DNA
