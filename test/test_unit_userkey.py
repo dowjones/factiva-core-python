@@ -10,15 +10,15 @@ class TestUserKey(unittest.TestCase):
 
     def test_create_user_with_env_key(self):
         u = UserKey(stats=True)
-        self.assertEqual(u.user_key, FACTIVA_USERKEY)
+        self.assertEqual(u.key, FACTIVA_USERKEY)
 
     def test_create_user_with_key_dummy(self):
-        u = UserKey(user_key=DUMMY_KEY)
-        self.assertNotEqual(u.user_key, FACTIVA_USERKEY)
+        u = UserKey(key=DUMMY_KEY)
+        self.assertNotEqual(u.key, FACTIVA_USERKEY)
 
     def test_create_user_with_invalid_key(self):
         with self.assertRaises(ValueError):
-            UserKey(user_key='aabbcc')
+            UserKey(key='aabbcc')
 
     def test_fetch_cloud_token(self):
         u = UserKey()

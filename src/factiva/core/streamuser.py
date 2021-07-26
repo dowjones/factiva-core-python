@@ -22,7 +22,7 @@ class StreamUser(APIKeyUser):
 
     Parameters
     ----------
-    api_key : str
+    key : str
         String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_APIKEY
         environment variable.
@@ -39,7 +39,7 @@ class StreamUser(APIKeyUser):
     --------
     Creates a new stream user.
         >>> stream_user = StreamUser(
-                api_key='abcd1234abcd1234abcd1234abcd1234',
+                key='abcd1234abcd1234abcd1234abcd1234',
                 request_info=False
             )
             print(stream_user.get_streams())
@@ -53,11 +53,11 @@ class StreamUser(APIKeyUser):
 
     def __init__(
         self,
-        api_key=None,
+        key=None,
         request_info=False,
     ):
         """Construct the object instance."""
-        super().__init__(api_key, request_info)
+        super().__init__(key, request_info)
 
     # # TODO: Please remove as this is a functionality that belongs to the News package
     # def get_streams(self) -> pd.DataFrame:
@@ -81,7 +81,7 @@ class StreamUser(APIKeyUser):
     #         When API request returns unexpected error
 
     #     """
-    #     request_headers = {'user-key': self.api_key}
+    #     request_headers = {'user-key': self.key}
     #     response = api_send_request(
     #         method="GET",
     #         endpoint_url=self.__API_ENDPOINT_STREAM_URL,
@@ -164,7 +164,7 @@ class StreamUser(APIKeyUser):
 
         msg = '''
         Could not determine user credentials:
-        Must specify account credentials as user_key
+        Must specify account credentials as key
         through env vars
         (see README.rst)
         '''
@@ -214,12 +214,12 @@ class StreamUser(APIKeyUser):
         ValueError: When the Pubsub client cannot be created
 
         """
-        if self.api_key:
-            return {'user-key': self.api_key}
+        if self.key:
+            return {'user-key': self.key}
 
         msg = '''
             Could not find credentials:
-            Must specify account credenstials as user_key
+            Must specify account credenstials as key
             (see README.rst)
         '''
         raise ValueError(msg)

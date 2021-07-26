@@ -12,7 +12,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
 
     Parameters
     ----------
-    api_key : str
+    key : str
         String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_APIKEY
         environment variable.
@@ -31,7 +31,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
         >>> aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234', request_info=True)
         >>> print(aku)
         (class 'factiva.core.apikeyuser.APIKeyUser')
-            api_key = ****************************1234
+            key = ****************************1234
             account_name = Demo Account
             account_type = account_with_limits
             active_products = Snapshots
@@ -49,7 +49,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
         >>> aku = APIKeyUser()
         >>> print(aku)
         (class 'factiva.core.apikeyuser.APIKeyUser')
-            api_key = ****************************1234
+            key = ****************************1234
             account_name =
             account_type =
             active_products =
@@ -70,7 +70,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
 
     __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
 
-    api_key = ''
+    key = ''
     account_name = ''
     account_type = ''
     active_products = ''
@@ -87,20 +87,20 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
 
     def __init__(
         self,
-        api_key=None,
+        key=None,
         request_info=False
     ):
         """Construct the instance of the class."""
-        if api_key is None:
+        if key is None:
             try:
-                api_key = load_environment_value('FACTIVA_APIKEY')
+                key = load_environment_value('FACTIVA_APIKEY')
             except Exception:
                 raise ValueError('Factiva API-Key not provided and environment variable FACTIVA_APIKEY not set.')
 
-        if len(api_key) != 32:
+        if len(key) != 32:
             raise ValueError('Factiva API-Key has the wrong length')
 
-        self.api_key = api_key
+        self.key = key
 
         if request_info is True:
             self.get_info()
@@ -147,7 +147,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
         """
         endpoint = f'{const.API_HOST}{const.API_EXTRACTIONS_BASEPATH}'
 
-        headers_dict = {'user-key': self.api_key}
+        headers_dict = {'user-key': self.key}
 
         response = api_send_request(method='GET', endpoint_url=endpoint, headers=headers_dict)
 
@@ -178,7 +178,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
         >>> aku = APIKeyUser('abcd1234abcd1234abcd1234abcd1234')
         >>> aku
         (class 'factiva.core.apikeyuser.APIKeyUser')
-            api_key = ****************************1234
+            key = ****************************1234
             account_name =
             account_type =
             active_products =
@@ -195,7 +195,7 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
         >>> aku.get_info()
         >>> aku
         (class 'factiva.core.apikeyuser.APIKeyUser')
-            api_key = ****************************1234
+            key = ****************************1234
             account_name = Demo Account
             account_type = account_with_limits
             active_products = Snapshots
@@ -211,8 +211,8 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
             remaining_extractions = 8
 
         """
-        account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.api_key}'
-        req_head = {'user-key': self.api_key}
+        account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.key}'
+        req_head = {'user-key': self.key}
         resp = requests.get(account_endpoint, headers=req_head)  # TODO: Consider processing all GET/POST requests in a separate class/module
         if resp.status_code == 200:
             try:
@@ -251,11 +251,11 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
 
     def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
         pprop = self.__dict__.copy()
-        del pprop['api_key']
-        masked_key = mask_string(self.__dict__['api_key'])
+        del pprop['key']
+        masked_key = mask_string(self.__dict__['key'])
 
         ret_val = f'{root_prefix}{str(self.__class__)}\n'
-        ret_val += f'{prefix}api_key = {masked_key}\n'
+        ret_val += f'{prefix}key = {masked_key}\n'
         if detailed:
             ret_val += '\n'.join((f'{prefix}{item} = {self.__print_property__(pprop[item])}' for item in pprop))
             ret_val += f'\n{prefix}remaining_documents = {self.__print_property__(self.remaining_documents)}\n'

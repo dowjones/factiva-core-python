@@ -9,7 +9,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
     Parameters
     ----------
-    user_key : str
+    key : str
         String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_USERKEY
         environment variable.
@@ -20,11 +20,11 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
     Examples
     --------
-    Creating a new UserKey instance providing the user_key string explicitly and requesting to retrieve the latest account details:
+    Creating a new UserKey instance providing the key string explicitly and requesting to retrieve the latest account details:
         >>> u = UserKey('abcd1234abcd1234abcd1234abcd1234', stats=True)
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
-            |-user_key = ****************************1234
+            |-key = ****************************1234
             |-cloud_token = **Not Fetched**
             |-account_name = AccName1234
             |-account_type = account_with_contract_limits
@@ -42,11 +42,11 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             |-remaining_documents = 197,485
             |-remaining_extractions = 2
 
-    Creating a new instance taking the user_key value from the environment varaible FACTIVA_USERKEY, and not requesting account statistics (default).
+    Creating a new instance taking the key value from the environment varaible FACTIVA_USERKEY, and not requesting account statistics (default).
         >>> u = UserKey()
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
-            |-user_key = ****************************1234
+            |-key = ****************************1234
             |-cloud_token = **Not Fetched**
             |-account_name =
             |-account_type =
@@ -71,7 +71,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
     __API_CLOUD_TOKEN_URL = f'{const.API_HOST}{const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH}'
 
-    user_key = ''
+    key = ''
     cloud_token = {}
     account_name = ''
     account_type = ''
@@ -89,20 +89,20 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
     def __init__(
         self,
-        user_key=None,
+        key=None,
         stats=False
     ):
         """Construct the instance of the class."""
-        if user_key is None:
+        if key is None:
             try:
-                user_key = load_environment_value('FACTIVA_USERKEY')
+                key = load_environment_value('FACTIVA_USERKEY')
             except Exception:
                 raise ValueError('Factiva user key not provided and environment variable FACTIVA_USERKEY not set.')
 
-        if len(user_key) != 32:
+        if len(key) != 32:
             raise ValueError('Factiva User-Key has the wrong length')
 
-        self.user_key = user_key
+        self.key = key
         self.cloud_token = {}
 
         if stats is True:
@@ -150,7 +150,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     #     """
     #     endpoint = f'{const.API_HOST}{const.API_EXTRACTIONS_BASEPATH}'
 
-    #     headers_dict = {'user-key': self.user_key}
+    #     headers_dict = {'user-key': self.key}
 
     #     response = api_send_request(method='GET', endpoint_url=endpoint, headers=headers_dict)
 
@@ -181,7 +181,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         >>> u = UserKey('abcd1234abcd1234abcd1234abcd1234')
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
-            |-user_key = ****************************1234
+            |-key = ****************************1234
             |-cloud_token = **Not Fetched**
             |-account_name =
             |-account_type =
@@ -201,7 +201,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         >>> u.get_stats()
         >>> print(u)
             <class 'factiva.core.userkey.UserKey'>
-            |-user_key = ****************************1234
+            |-key = ****************************1234
             |-cloud_token = **Not Fetched**
             |-account_name = AccName1234
             |-account_type = account_with_contract_limits
@@ -220,8 +220,8 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             |-remaining_extractions = 2
 
         """
-        account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.user_key}'
-        req_head = {'user-key': self.user_key}
+        account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.key}'
+        req_head = {'user-key': self.key}
         resp = api_send_request(method='GET', endpoint_url=account_endpoint, headers=req_head)
         # resp = requests.get(account_endpoint, headers=req_head)  # TODO: Remove if OK
         if resp.status_code == 200:
@@ -264,7 +264,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         RuntimeError: When API request returns unexpected error
 
         """
-        req_head = {'user-key': self.user_key}
+        req_head = {'user-key': self.key}
         response = api_send_request(
             method="GET",
             endpoint_url=f'{self.__API_CLOUD_TOKEN_URL}',
@@ -284,7 +284,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         except TypeError:
             raise ValueError(
                 '''
-                Unable to get a cloud token for the given user_key. This account might have limited access.
+                Unable to get a cloud token for the given key. This account might have limited access.
                 '''
             )
 
@@ -305,16 +305,16 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
         # TODO: Improve the output for enabled_company_identifiers
         pprop = self.__dict__.copy()
-        del pprop['user_key']
+        del pprop['key']
         del pprop['cloud_token']
-        masked_key = mask_string(self.user_key)
+        masked_key = mask_string(self.key)
         if self.cloud_token == {}:
             masked_token = '**Not Fetched**'
         else:
             masked_token = mask_string(self.cloud_token['private_key'][58:92], 12)
 
         ret_val = f'{root_prefix}{str(self.__class__)}\n'
-        ret_val += f'{prefix}user_key = {masked_key}\n'
+        ret_val += f'{prefix}key = {masked_key}\n'
         ret_val += f'{prefix}cloud_token = {masked_token}\n'
         if detailed:
             ret_val += '\n'.join((f'{prefix}{item} = {self.__print_property__(pprop[item])}' for item in pprop))
@@ -325,7 +325,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         return ret_val
 
     @staticmethod
-    def create_userkey(user_key, stats):
+    def create_user_key(key, stats):
         """Determine the way to initialize an api key user according to the type of parameter provided.
 
         Parameters
@@ -347,16 +347,16 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             RuntimeError: When an UserKey instance cannot be created using the provided parameters
 
         """
-        if isinstance(user_key, UserKey):
-            return user_key
+        if isinstance(key, UserKey):
+            return key
 
-        if isinstance(user_key, str):
+        if isinstance(key, str):
             try:
-                return UserKey(user_key, stats=stats)
+                return UserKey(key, stats=stats)
             except Exception:
                 raise RuntimeError("User cannot be obtained from the provided key.")
 
-        if user_key is None:
+        if key is None:
             try:
                 return UserKey(stats=stats)
             except Exception:

@@ -53,7 +53,7 @@ DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 
 def check_UserKey_types(aku):
     aku = UserKey(stats=True)
-    assert type(aku.user_key) == str
+    assert type(aku.key) == str
     assert type(aku.cloud_token) == dict
     assert type(aku.account_name) == str
     assert type(aku.active_products) == str
@@ -74,34 +74,34 @@ def test_UserKey_with_stats():
     # Creates the object using the ENV variable and request the usage details to the API service
     aku = UserKey(stats=True)
     check_UserKey_types(aku)
-    assert aku.user_key == FACTIVA_USERKEY
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
 def test_UserKey_without_stats():
-    # Creates an empty object from the ENV variable with a value only for the user_key property
+    # Creates an empty object from the ENV variable with a value only for the key property
     aku = UserKey()
     check_UserKey_types(aku)
-    assert aku.user_key == FACTIVA_USERKEY
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) == 0
     assert len(aku.active_products) == 0
 
 
 def test_user_with_parameter_and_stats():
     # API Key is passed as a string and stats=True
-    aku = UserKey(user_key=FACTIVA_USERKEY, stats=True)
+    aku = UserKey(key=FACTIVA_USERKEY, stats=True)
     check_UserKey_types(aku)
-    assert aku.user_key == FACTIVA_USERKEY
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
-# Creates an empty object from the provided string with a value only for the user_key property
+# Creates an empty object from the provided string with a value only for the key property
 def test_user_with_parameter_without_stats():
     u = UserKey(DUMMY_KEY)
     check_UserKey_types(u)
-    assert u.user_key == DUMMY_KEY
+    assert u.key == DUMMY_KEY
     assert u.account_name == ''
     assert u.active_products == ''
 

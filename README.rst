@@ -27,13 +27,13 @@ Create `UserKey` instance and retrieve a summary of the account statistics.
 .. code-block:: python
 
     from factiva.core import UserKey
-    u = UserKey(api_key='abcd1234abcd1234abcd1234abcd1234', stats=True)
+    u = UserKey(key='abcd1234abcd1234abcd1234abcd1234', stats=True)
     print(u)
 
 .. code-block::
 
     <class 'factiva.core.userkey.UserKey'>
-    |-user_key = ****************************1234
+    |-key = ****************************1234
     |-cloud_token = **Not Fetched**
     |-account_name = AccName1234
     |-account_type = account_with_contract_limits
