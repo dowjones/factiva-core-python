@@ -1,12 +1,16 @@
 """Define library's constant literals."""
-from .errors import *
+# from .errors import *
 
 API_HOST = 'https://api.dowjones.com'
 API_ACCOUNT_OAUTH2_HOST = 'https://accounts.dowjones.com/oauth2/v1/token'
 
+# UserKey
 API_ACCOUNT_BASEPATH = '/alpha/accounts'
+API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = '/alpha/accounts/streaming-credentials'
+
+# Dynamic Prefixes
 ALPHA_BASEPATH = '/alpha'
-DNA_BASEPATH = '/dna'
+DNA_BASEPATH = '/dna'  # Deprecated
 
 # Snapshots
 API_SNAPSHOTS_BASEPATH = '/alpha/extractions/documents'
@@ -35,7 +39,6 @@ API_DATETIME_FIELDS = [API_PUBLICATION_DATETIME_FIELD, API_MODIFICATION_DATETIME
 
 # Streams
 API_STREAMS_BASEPATH = '/alpha/streams'
-API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = '/accounts/streaming-credentials'
 DOC_COUNT_EXCEEDED = "DOC_COUNT_EXCEEDED"
 CHECK_EXCEEDED_WAIT_SPACING = 300
 PUBSUB_MESSAGES_WAIT_SPACING = 10

@@ -1,14 +1,14 @@
 """Factiva Core User Stream Class."""
 
 import json
-import pandas as pd
+# import pandas as pd
 
-from google.cloud.pubsub_v1 import SubscriberClient
-from google.oauth2 import service_account
+# from google.cloud.pubsub_v1 import SubscriberClient
+# from google.oauth2 import service_account
 
 from factiva.core import const, APIKeyUser
 from factiva.helper import api_send_request
-from .stream_response import StreamResponse
+# from .stream_response import StreamResponse
 
 
 class StreamUser(APIKeyUser):
@@ -22,7 +22,7 @@ class StreamUser(APIKeyUser):
 
     Parameters
     ----------
-    api_key : str
+    key : str
         String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_APIKEY
         environment variable.
@@ -39,7 +39,7 @@ class StreamUser(APIKeyUser):
     --------
     Creates a new stream user.
         >>> stream_user = StreamUser(
-                api_key='abcd1234abcd1234abcd1234abcd1234',
+                key='abcd1234abcd1234abcd1234abcd1234',
                 request_info=False
             )
             print(stream_user.get_streams())
@@ -49,55 +49,55 @@ class StreamUser(APIKeyUser):
     __API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH
     __DEFAULT_HOST_DNA = f'{const.API_HOST}{const.DNA_BASEPATH}'
     __DEFAULT_HOST_ALPHA = f'{const.API_HOST}{const.ALPHA_BASEPATH}'
-    __API_ENDPOINT_STREAM_URL = f'{const.API_HOST}{const.API_STREAMS_BASEPATH}/'
+    # __API_ENDPOINT_STREAM_URL = f'{const.API_HOST}{const.API_STREAMS_BASEPATH}/'
 
     def __init__(
         self,
-        api_key=None,
+        key=None,
         request_info=False,
     ):
         """Construct the object instance."""
-        super().__init__(api_key, request_info)
+        super().__init__(key, request_info)
 
-    # TODO: Please remove as this is a functionality that belongs to the News package
-    def get_streams(self) -> pd.DataFrame:
-        """Obtain streams from a given user.
+    # # TODO: Please remove as this is a functionality that belongs to the News package
+    # def get_streams(self) -> pd.DataFrame:
+    #     """Obtain streams from a given user.
 
-        Function which returns the streams a given user with
-        its respective key using the default stream url
+    #     Function which returns the streams a given user with
+    #     its respective key using the default stream url
 
-        Returns
-        -------
-        Json object -> list of objects containing
-        information about every stream (id, link, state, etc)
+    #     Returns
+    #     -------
+    #     Json object -> list of objects containing
+    #     information about every stream (id, link, state, etc)
 
-        Raises
-        ------
-        AttributeError:
-            When is not possible to parse the data as json or dataframe
-        ValueError:
-            When API key is not valid
-        RuntimeError:
-            When API request returns unexpected error
+    #     Raises
+    #     ------
+    #     AttributeError:
+    #         When is not possible to parse the data as json or dataframe
+    #     ValueError:
+    #         When API key is not valid
+    #     RuntimeError:
+    #         When API request returns unexpected error
 
-        """
-        request_headers = {'user-key': self.api_key}
-        response = api_send_request(
-            method="GET",
-            endpoint_url=self.__API_ENDPOINT_STREAM_URL,
-            headers=request_headers
-        )
-        if response.status_code == 200:
-            try:
-                response_data = response.json()
+    #     """
+    #     request_headers = {'user-key': self.key}
+    #     response = api_send_request(
+    #         method="GET",
+    #         endpoint_url=self.__API_ENDPOINT_STREAM_URL,
+    #         headers=request_headers
+    #     )
+    #     if response.status_code == 200:
+    #         try:
+    #             response_data = response.json()
 
-                return [StreamResponse(data=stream, links=stream.get('links', None)) for stream in response_data['data']]
-            except Exception:
-                raise AttributeError('Unexpected Get Streams API Response.')
-        elif response.status_code == 403:
-            raise ValueError('Factiva API-Key does not exist or inactive.')
-        else:
-            raise RuntimeError('Unexpected Get Streams API Error')
+    #             return [StreamResponse(data=stream, links=stream.get('links', None)) for stream in response_data['data']]
+    #         except Exception:
+    #             raise AttributeError('Unexpected Get Streams API Response.')
+    #     elif response.status_code == 403:
+    #         raise ValueError('Factiva API-Key does not exist or inactive.')
+    #     else:
+    #         raise RuntimeError('Unexpected Get Streams API Error')
 
     def fetch_credentials(self) -> dict:
         """Fetch the current headers and uri (v1 or v2).
@@ -164,41 +164,41 @@ class StreamUser(APIKeyUser):
 
         msg = '''
         Could not determine user credentials:
-        Must specify account credentials as user_key
+        Must specify account credentials as key
         through env vars
         (see README.rst)
         '''
         raise ValueError(msg)
 
-    def get_client_subscription(self) -> SubscriberClient:
-        """Obtain the subscriber client for pubsub.
+    # def get_client_subscription(self) -> SubscriberClient:
+    #     """Obtain the subscriber client for pubsub.
 
-        The credentials are obtained from fetch_credentials() function
-        These credentials are used to authenticate with Google services
-        If all is correct, it will be created a SubscriberClient for Pubsub
+    #     The credentials are obtained from fetch_credentials() function
+    #     These credentials are used to authenticate with Google services
+    #     If all is correct, it will be created a SubscriberClient for Pubsub
 
-        Returns
-        -------
-        SubscriberClient object from google cloud library used for Pubsub
+    #     Returns
+    #     -------
+    #     SubscriberClient object from google cloud library used for Pubsub
 
-        Raises
-        ------
-        RuntimeError: When the Pubsub client cannot be created
+    #     Raises
+    #     ------
+    #     RuntimeError: When the Pubsub client cannot be created
 
-        """
-        streaming_credentials = self.fetch_credentials()
-        try:
-            credentials = service_account.Credentials.from_service_account_info(
-                streaming_credentials
-            )
+    #     """
+    #     streaming_credentials = self.fetch_credentials()
+    #     try:
+    #         credentials = service_account.Credentials.from_service_account_info(
+    #             streaming_credentials
+    #         )
 
-            return SubscriberClient(credentials=credentials)
-        except Exception:
-            raise RuntimeError(
-                '''
-                Something unexpected happened while creating Pubsub client
-                '''
-            )
+    #         return SubscriberClient(credentials=credentials)
+    #     except Exception:
+    #         raise RuntimeError(
+    #             '''
+    #             Something unexpected happened while creating Pubsub client
+    #             '''
+    #         )
 
     def get_authentication_headers(self) -> dict:
         """Obtain the current auhtentication headers.
@@ -214,12 +214,12 @@ class StreamUser(APIKeyUser):
         ValueError: When the Pubsub client cannot be created
 
         """
-        if self.api_key:
-            return {'user-key': self.api_key}
+        if self.key:
+            return {'user-key': self.key}
 
         msg = '''
             Could not find credentials:
-            Must specify account credenstials as user_key
+            Must specify account credenstials as key
             (see README.rst)
         '''
         raise ValueError(msg)

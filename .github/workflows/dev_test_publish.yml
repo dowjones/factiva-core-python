@@ -6,10 +6,8 @@ on:
       - dev
 
 env:
-  ENVIRONMENT_USER_KEY: ${{secrets.ENVIRONMENT_USER_KEY}}
-  FACTIVA_APIKEY: ${{secrets.ENVIRONMENT_USER_KEY}}
+  FACTIVA_USERKEY: ${{secrets.FACTIVA_USERKEY}}
   FACTIVA_CLIENT_EMAIL: ${{secrets.FACTIVA_CLIENT_EMAIL}}
-  
 
 jobs:
   # linting:
@@ -59,7 +57,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: '3.9'
 
       - name: Install latest PIP
         run: |
@@ -67,7 +65,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          python -m pip install pytest pytest-cov requests pandas numpy google-cloud-core google-cloud-pubsub fastavro unittest2
+          python -m pip install pytest pytest-cov requests pandas numpy fastavro unittest2
 
       - name: Setup the same package
         run: |

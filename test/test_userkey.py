@@ -1,8 +1,8 @@
 import pytest
-from factiva.core import APIKeyUser
+from factiva.core import UserKey
 from factiva.helper import load_environment_value
 
-FACTIVA_APIKEY = load_environment_value("FACTIVA_APIKEY")
+FACTIVA_USERKEY = load_environment_value("FACTIVA_USERKEY")
 DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 
 # API Response sample with the most complete set of attributes
@@ -51,9 +51,10 @@ DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 # }
 
 
-def check_apikeyuser_types(aku):
-    aku = APIKeyUser(request_info=True)
-    assert type(aku.api_key) == str
+def check_UserKey_types(aku):
+    aku = UserKey(stats=True)
+    assert type(aku.key) == str
+    assert type(aku.cloud_token) == dict
     assert type(aku.account_name) == str
     assert type(aku.active_products) == str
     assert type(aku.max_allowed_concurrent_extractions) == int
@@ -64,55 +65,57 @@ def check_apikeyuser_types(aku):
     assert type(aku.total_downloaded_bytes) == int
     assert type(aku.total_extracted_documents) == int
     assert type(aku.total_extractions) == int
+    assert type(aku.total_stream_instances) == int
     assert type(aku.total_stream_subscriptions) == int
-    assert type(aku.total_stream_topics) == int
     assert type(aku.enabled_company_identifiers) == list
 
 
-def test_apikeyuser_with_request_info():
+def test_UserKey_with_stats():
     # Creates the object using the ENV variable and request the usage details to the API service
-    aku = APIKeyUser(request_info=True)
-    check_apikeyuser_types(aku)
-    assert aku.api_key == FACTIVA_APIKEY
+    aku = UserKey(stats=True)
+    check_UserKey_types(aku)
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
-def test_apikeyuser_without_info():
-    # Creates an empty object from the ENV variable with a value only for the api_key property
-    aku = APIKeyUser()
-    check_apikeyuser_types(aku)
-    assert aku.api_key == FACTIVA_APIKEY
+def test_UserKey_without_stats():
+    # Creates an empty object from the ENV variable with a value only for the key property
+    aku = UserKey()
+    check_UserKey_types(aku)
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) == 0
     assert len(aku.active_products) == 0
 
 
-def test_user_with_parameter_and_info():
-    # API Key is passed as a string and request_info=True
-    aku = APIKeyUser(api_key=FACTIVA_APIKEY, request_info=True)
-    check_apikeyuser_types(aku)
-    assert aku.api_key == FACTIVA_APIKEY
+def test_user_with_parameter_and_stats():
+    # API Key is passed as a string and stats=True
+    aku = UserKey(key=FACTIVA_USERKEY, stats=True)
+    check_UserKey_types(aku)
+    assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
-# Creates an empty object from the provided string with a value only for the api_key property
-def test_user_with_parameter_without_info():
-    aku = APIKeyUser(DUMMY_KEY)
-    check_apikeyuser_types(aku)
-    assert aku.api_key == DUMMY_KEY
-    assert aku.account_name == ''
-    assert aku.active_products == ''
+# Creates an empty object from the provided string with a value only for the key property
+def test_user_with_parameter_without_stats():
+    u = UserKey(DUMMY_KEY)
+    check_UserKey_types(u)
+    assert u.key == DUMMY_KEY
+    assert u.account_name == ''
+    assert u.active_products == ''
 
 
 def test_invalid_key():
     # Creates an object from the provided string and request the usage details to the API service
     # The key is invalid and this should validate how the error is processed
-    with pytest.raises(ValueError, match=r'Factiva API-Key does not exist or inactive.'):
-        aku = APIKeyUser(DUMMY_KEY, request_info=True)
+    with pytest.raises(ValueError, match=r'Factiva User-Key does not exist or inactive.'):
+        u = UserKey(DUMMY_KEY, stats=True)
+        assert u.account_name != ''
 
 
 def test_invald_lenght_key():
     # Attempts to create an object with malformed keys. This requires assert the raised exception.
-    with pytest.raises(ValueError, match=r'Factiva API-Key has the wrong length'):
-        aku = APIKeyUser('abc')
+    with pytest.raises(ValueError, match=r'Factiva User-Key has the wrong length'):
+        u = UserKey('abc')
+        assert u.account_name != ''

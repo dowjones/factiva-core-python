@@ -49,5 +49,5 @@ setup(
     ],
     keywords='news, news aggregator, risk, compliance, nlp, alternative data',
     python_requires='>=3.6',
-    install_requires=['requests', 'pandas', 'numpy', 'google-cloud-core', 'google-cloud-pubsub'],
+    install_requires=['requests', 'pandas', 'numpy'],
 )
