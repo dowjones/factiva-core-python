@@ -1,3 +1,6 @@
-from .userkey import (UserKey)
+"""
+    Factiva Core Auth Module
+"""
+__all__ = ['userkey', 'UserKey']
 
-__all__ = [UserKey, 'UserKey']
+from .userkey import (UserKey)
