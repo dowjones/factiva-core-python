@@ -8,7 +8,7 @@ import json
 
 from factiva.core import const, APIKeyUser
 from factiva.helper import api_send_request
-# from .stream_response import StreamResponse
+# from factiva.core.stream_response import StreamResponse
 
 
 class StreamUser(APIKeyUser):
