@@ -325,7 +325,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         return ret_val
 
     @staticmethod
-    def create_user_key(key, stats):
+    def create_user_key(key=None, stats=False):
         """Determine the way to initialize an api key user according to the type of parameter provided.
 
         Parameters
