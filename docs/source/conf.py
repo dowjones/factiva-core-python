@@ -16,10 +16,11 @@ from factiva.core.__version__ import __version__
 sys.path.insert(0, os.path.abspath('../../src'))
 sys.path.insert(0, os.path.abspath('../../src/factiva'))
 sys.path.insert(0, os.path.abspath('../../src/factiva/core'))
-
+sys.path.insert(0, os.path.abspath('../../src/factiva/core/auth'))
+sys.path.insert(0, os.path.abspath('../../src/factiva/core/const'))
+sys.path.insert(0, os.path.abspath('../../src/factiva/core/dicts'))
 
 # -- Project information -----------------------------------------------------
-
 project = 'Factiva Core'
 copyright = '2021, Dow Jones'
 author = 'Dow Jones'
