@@ -1,6 +1,7 @@
 """Factiva Core UserKey Class."""
 import json
-from factiva.helper import load_environment_value, mask_string, api_send_request
+from ..req import api_send_request
+from ..tools import load_environment_value, mask_string
 from factiva.core import const
 
 

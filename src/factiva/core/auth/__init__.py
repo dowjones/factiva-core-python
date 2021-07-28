@@ -3,4 +3,4 @@
 """
 __all__ = ['userkey', 'UserKey']
 
-from factiva.core.auth.userkey import (UserKey)
+from .userkey import (UserKey)
