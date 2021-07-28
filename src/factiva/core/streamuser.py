@@ -7,7 +7,7 @@ import json
 # from google.oauth2 import service_account
 
 from factiva.core import const, APIKeyUser
-from factiva.helper import api_send_request
+from .req import api_send_request
 # from factiva.core.stream_response import StreamResponse
 
 

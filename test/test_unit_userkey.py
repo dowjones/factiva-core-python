@@ -1,6 +1,6 @@
 import unittest
 from factiva.core import UserKey
-from factiva.helper import load_environment_value
+from factiva.core.tools import load_environment_value
 
 FACTIVA_USERKEY = load_environment_value("FACTIVA_USERKEY")
 DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'

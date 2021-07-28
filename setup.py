@@ -21,7 +21,8 @@ setup(
     author_email='customer.solutions@dowjones.com',
     # Warning: the folder 'factiva' should NOT have an __init__.py file to avoid conflicts with the same namespace across other packages
     package_dir={'': 'src'},
-    packages=['factiva.core', 'factiva.helper', 'factiva.core.dicts', 'factiva.core.const', 'factiva.core.auth'],
+    packages=['factiva.core', 'factiva.helper', 'factiva.core.dicts', 'factiva.core.const',
+        'factiva.core.auth', 'factiva.core.req', 'factiva.core.tools'],
     package_data={'': ['*.csv']},
     url='https://github.com/dowjones/factiva-core-python',
 
