@@ -14,7 +14,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         String containing the 32-character long APi Key. If not provided, the
         constructor will try to obtain its value from the FACTIVA_USERKEY
         environment variable.
-    stats : boolean, optional (Default: False)
+    stats : bool, optional (Default: False)
         Indicates if user data has to be pulled from the server. This operation
         fills account detail properties along with maximum, used and remaining
         values. It may take several seconds to complete.

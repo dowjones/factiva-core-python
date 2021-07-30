@@ -20,6 +20,7 @@ API_EXTRACTIONS_BASEPATH = '/alpha/extractions'
 
 API_SNAPSHOTS_TAXONOMY_BASEPATH = '/alpha/taxonomies'
 API_SNAPSHOTS_COMPANIES_BASEPATH = '/alpha/companies'
+API_SNAPSHOTS_COMPANY_IDENTIFIERS_BASEPATH = '/alpha/companies/identifiers'
 
 # ANALYTICS
 API_AVRO_FORMAT = 'avro'
@@ -60,3 +61,15 @@ API_JOB_EXPECTED_STATES = [API_JOB_CREATED_STATE, API_JOB_QUEUED_STATE, API_JOB_
                            API_JOB_CANCELLED_STATE]
 
 API_JOB_ACTIVE_WAIT_SPACING = 10
+
+# SNAPSHOT FILES
+SNAPSHOT_FILE_STATS_FIELDS = ['an', 'company_codes', 'company_codes_about',
+    'company_codes_occur', 'industry_codes', 'ingestion_datetime',
+    'language_code', 'modification_datetime',
+    'publication_datetime',
+    'publisher_name', 'region_codes', 'region_of_origin',
+    'source_code', 'source_name',
+    'subject_codes', 'title', 'word_count']
+
+SNAPSHOT_FILE_DELETE_FIELDS = ['art', 'credit', 'document_type',
+    'publication_date', 'modfication_date'] # publication_date and modification_date are deprecated
