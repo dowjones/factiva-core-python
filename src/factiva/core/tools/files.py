@@ -42,9 +42,7 @@ class SnapshotFiles(object):
             if d_field in r_df.columns:
                 r_df.drop(d_field, axis=1, inplace=True)
 
-        r_df['publication_date'] = r_df['publication_date'].astype('datetime64[ms]')
         r_df['publication_datetime'] = r_df['publication_datetime'].astype('datetime64[ms]')
-        r_df['modification_date'] = r_df['modification_date'].astype('datetime64[ms]')
         r_df['modification_datetime'] = r_df['modification_datetime'].astype('datetime64[ms]')
         r_df['ingestion_datetime'] = r_df['ingestion_datetime'].astype('datetime64[ms]')
         return r_df
