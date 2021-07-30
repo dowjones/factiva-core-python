@@ -20,6 +20,7 @@ API_EXTRACTIONS_BASEPATH = '/alpha/extractions'
 
 API_SNAPSHOTS_TAXONOMY_BASEPATH = '/alpha/taxonomies'
 API_SNAPSHOTS_COMPANIES_BASEPATH = '/alpha/companies'
+API_SNAPSHOTS_COMPANY_IDENTIFIERS_BASEPATH = '/alpha/companies/identifiers'
 
 # ANALYTICS
 API_AVRO_FORMAT = 'avro'
