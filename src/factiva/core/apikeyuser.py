@@ -1,5 +1,4 @@
 """Factiva Core API Key User Class."""
-
 import requests
 import pandas as pd
 
@@ -160,9 +159,14 @@ class APIKeyUser:  # TODO: Create a DJUserBase class that defines root propertie
 
         response_data = response.json()
 
-        extraction_list = [flatten_dict(extraction) for extraction in response_data['data']]
+        extraction_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
+        extraction_df.rename(columns={'id': 'object_id'}, inplace=True)
+        ids_df = extraction_df['object_id'].str.split('-', expand=True)
+        extraction_df['snapshot_sid'] = ids_df[4]
+        extraction_df['update_id'] = ids_df[6]
+        extraction_df.drop(['id', 'self', 'type'], axis=1, inplace=True)
 
-        return pd.DataFrame(extraction_list)
+        return extraction_df
 
     def get_info(self):
         """Request the account details to the Factiva Account API Endpoint.
