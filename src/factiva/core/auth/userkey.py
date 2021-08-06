@@ -1,7 +1,8 @@
 """Factiva Core UserKey Class."""
 import json
+import pandas as pd
 from ..req import api_send_request
-from ..tools import load_environment_value, mask_string
+from ..tools import load_environment_value, mask_string, flatten_dict
 from factiva.core import const
 
 
@@ -291,6 +292,93 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
         self.cloud_token = json.loads(streaming_credentials_string)
         return True
+
+    def get_extractions(self) -> pd.DataFrame:
+        """Request a list of the extractions of the account.
+
+        Returns
+        -------
+        Dataframe containing the information about the account extractions
+
+        Raises
+        ------
+        - ValueError when the API Key provided is not valid
+        - RuntimeError when the API returns an unexpected error
+
+        """
+        endpoint = f'{const.API_HOST}{const.API_EXTRACTIONS_BASEPATH}'
+
+        headers_dict = {'user-key': self.key}
+
+        response = api_send_request(method='GET', endpoint_url=endpoint, headers=headers_dict)
+
+        if response.status_code != 200:
+            if response.status_code == 403:
+                raise ValueError('Factiva API-Key does not exist or inactive.')
+
+            raise RuntimeError(f'Unexpected API Error with message: {response.text}')
+
+        response_data = response.json()
+
+        extraction_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
+        extraction_df.rename(columns={'id': 'object_id'}, inplace=True)
+        ids_df = extraction_df['object_id'].str.split('-', expand=True)
+        extraction_df['snapshot_sid'] = ids_df[4]
+        extraction_df['update_id'] = ids_df[6]
+        extraction_df.drop(['self', 'type'], axis=1, inplace=True)
+
+        return extraction_df
+
+    def get_streams(self) -> pd.DataFrame:
+        """Obtain streams from a given user.
+
+        Function which returns the streams a given user with
+        its respective key using the default stream url
+
+        Returns
+        -------
+        Json object -> list of objects containing
+        information about every stream (id, link, state, etc)
+
+        Raises
+        ------
+        AttributeError:
+            When is not possible to parse the data as json or dataframe
+        ValueError:
+            When API key is not valid
+        RuntimeError:
+            When API request returns unexpected error
+
+        """
+        request_headers = {'user-key': self.key}
+        response = api_send_request(
+            method="GET",
+            endpoint_url=f'{const.API_HOST}{const.API_STREAMS_BASEPATH}',
+            headers=request_headers
+        )
+        if response.status_code == 200:
+            try:
+                def extract_subscriptions(x):
+                    r = []
+                    for i in x:
+                        r.append(i['id'])
+                    return r
+                
+                response_data = response.json()
+                stream_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
+                stream_df.rename(columns={'id': 'object_id'}, inplace=True)
+                ids_df = stream_df['object_id'].str.split('-', expand=True)
+                stream_df['stream_id'] = ids_df[4]
+                stream_df['stream_type'] = ids_df[2]
+                stream_df['subscriptions'] = stream_df['data'].apply(lambda x: extract_subscriptions(x))
+                stream_df.drop(['self', 'type', 'data'], axis=1, inplace=True)
+                return stream_df
+            except Exception:
+                raise AttributeError('Unexpected Get Streams API Response.')
+        elif response.status_code == 403:
+            raise ValueError('Factiva API-Key does not exist or inactive.')
+        else:
+            raise RuntimeError('Unexpected Get Streams API Error')
 
     def __print_property__(self, property_value) -> str:
         if type(property_value) == int:
