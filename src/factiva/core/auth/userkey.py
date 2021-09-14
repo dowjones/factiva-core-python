@@ -89,6 +89,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     total_stream_subscriptions = 0
     enabled_company_identifiers = []
 
+
     def __init__(
         self,
         key=None,
@@ -124,49 +125,18 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             self.total_stream_subscriptions = 0
             self.enabled_company_identifiers = []
 
+
     @property
     def remaining_extractions(self):
         """Account remaining extractions."""
         return self.max_allowed_extractions - self.total_extractions
+
 
     @property
     def remaining_documents(self):
         """Account remaining documents."""
         return self.max_allowed_extracted_documents - self.total_extracted_documents
 
-    # [MB] TODO: Please move this method to factiva-news/snapshot/snapshot.py
-    # The number of extractions is OK under this class for account management
-    # information (get_info), but the extraction list belongs to the Snapshot class.
-    # def get_extractions(self) -> pd.DataFrame:
-    #     """Request a list of the extractions of the account.
-
-    #     Returns
-    #     -------
-    #     Dataframe containing the information about the account extractions
-
-    #     Raises
-    #     ------
-    #     - ValueError when the API Key provided is not valid
-    #     - RuntimeError when the API returns an unexpected error
-
-    #     """
-    #     endpoint = f'{const.API_HOST}{const.API_EXTRACTIONS_BASEPATH}'
-
-    #     headers_dict = {'user-key': self.key}
-
-    #     response = api_send_request(method='GET', endpoint_url=endpoint, headers=headers_dict)
-
-    #     if response.status_code != 200:
-    #         if response.status_code == 403:
-    #             raise ValueError('Factiva API-Key does not exist or inactive.')
-
-    #         raise RuntimeError(f'Unexpected API Error with message: {response.text}')
-
-    #     response_data = response.json()
-
-    #     extraction_list = [flatten_dict(extraction) for extraction in response_data['data']]
-
-    #     return pd.DataFrame(extraction_list)
 
     def get_stats(self) -> bool:
         """Request the account details to the Factiva Account API Endpoint.
@@ -250,6 +220,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             raise RuntimeError('Unexpected Account Information API Error')
         return True
 
+
     def get_cloud_token(self) -> bool:
         """
         Request a cloud token to the API and saves its value
@@ -293,12 +264,13 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         self.cloud_token = json.loads(streaming_credentials_string)
         return True
 
+
     def get_extractions(self) -> pd.DataFrame:
         """Request a list of the extractions of the account.
 
         Returns
         -------
-        Dataframe containing the information about the account extractions
+        Dataframe containing the list of historical extractions for the account.
 
         Raises
         ------
@@ -323,11 +295,44 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         extraction_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
         extraction_df.rename(columns={'id': 'object_id'}, inplace=True)
         ids_df = extraction_df['object_id'].str.split('-', expand=True)
-        extraction_df['snapshot_sid'] = ids_df[4]
-        extraction_df['update_id'] = ids_df[6]
+        if len(ids_df) >= 4:
+            extraction_df['snapshot_sid'] = ids_df[4]
+        else:
+            extraction_df['snapshot_sid'] = ''
+        if len(ids_df) >= 6:
+            extraction_df['update_id'] = ids_df[6]
+        else:
+            extraction_df['update_id'] = ''
         extraction_df.drop(['self', 'type'], axis=1, inplace=True)
 
         return extraction_df
+
+
+    def show_extractions(self, updates=False):
+        """Shows a list of the extractions of the account.
+
+        Parameters
+        ----------
+        updates : bool
+            Flag that indicates whether the displayed list should include (True)
+            or not (False) Snapshot Update calls.
+
+        Returns
+        -------
+        Dataframe containing the list of historical extractions for the account.
+
+        Raises
+        ------
+        - ValueError when the API Key provided is not valid
+        - RuntimeError when the API returns an unexpected error
+
+        """
+        e = self.get_extractions()
+        if updates:
+            print(e.loc[:, e.columns != 'object_id'])
+        else:
+            print(e.loc[e.update_id.isnull(), e.columns != 'object_id'])
+
 
     def get_streams(self) -> pd.DataFrame:
         """Obtain streams from a given user.
@@ -337,8 +342,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
         Returns
         -------
-        Json object -> list of objects containing
-        information about every stream (id, link, state, etc)
+        DataFrame -> DataFrame with the list of historical extractions
 
         Raises
         ------
@@ -380,6 +384,41 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         else:
             raise RuntimeError('Unexpected Get Streams API Error')
 
+
+    def show_streams(self, running=True):
+        """Shows the list of streams for a given user.
+
+        This function runs the existing function get_streams and
+        prints a user-friendly table with stream details.
+
+        Parameters
+        ----------
+        running : bool
+            Flag that indicates whether the displayed list should be restricted
+            to only running streams (True) or also include cancelled and failed
+            ones (False).
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        AttributeError:
+            When is not possible to parse the data as json or dataframe
+        ValueError:
+            When API key is not valid
+        RuntimeError:
+            When API request returns unexpected error
+
+        """
+        r = self.get_streams()
+        if running:
+            print(r.loc[r.job_status == const.API_JOB_RUNNING_STATE, r.columns != 'object_id'])
+        else:
+            print(r.loc[:, r.columns != 'object_id'])
+
+
     def __print_property__(self, property_value) -> str:
         if type(property_value) == int:
             pval = f'{property_value:,d}'
@@ -387,9 +426,11 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             pval = property_value
         return pval
 
+
     def __repr__(self):
         """Return a string representation of the object."""
         return self.__str__()
+
 
     def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
         # TODO: Improve the output for enabled_company_identifiers
@@ -412,6 +453,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         else:
             ret_val += f'{prefix}...'
         return ret_val
+
 
     @staticmethod
     def create_user_key(key=None, stats=False):
