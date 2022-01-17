@@ -362,12 +362,15 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         )
         if response.status_code == 200:
             try:
-                def extract_subscriptions(x):
-                    r = []
-                    for i in x:
-                        r.append(i['id'])
-                    return r
-                
+                def extract_subscriptions(subscription):
+                    # Fixed issue#12 (https://github.com/dowjones/factiva-core-python/issues/12)
+                    id_list = []
+                    for i in subscription:
+                        s_idp = i['id'].split('-')
+                        s_id = f"{s_idp[-3]}-{s_idp[-2]}-{s_idp[-1]}"
+                        id_list.append(s_id)
+                    return id_list
+
                 response_data = response.json()
                 stream_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
                 stream_df.rename(columns={'id': 'object_id'}, inplace=True)
@@ -375,6 +378,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
                 stream_df['stream_id'] = ids_df[4]
                 stream_df['stream_type'] = ids_df[2]
                 stream_df['subscriptions'] = stream_df['data'].apply(lambda x: extract_subscriptions(x))
+                stream_df['n_subscriptions'] = stream_df['subscriptions'].str.len()
                 stream_df.drop(['self', 'type', 'data'], axis=1, inplace=True)
                 return stream_df
             except Exception:
