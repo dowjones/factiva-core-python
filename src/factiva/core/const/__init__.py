@@ -3,6 +3,7 @@
 
 API_HOST = 'https://api.dowjones.com'
 API_ACCOUNT_OAUTH2_HOST = 'https://accounts.dowjones.com/oauth2/v1/token'
+API_LATEST_VERSION= "2.0"
 
 # UserKey
 API_ACCOUNT_BASEPATH = '/alpha/accounts'
@@ -41,6 +42,16 @@ API_PUBLICATION_DATETIME_FIELD = 'publication_datetime'
 API_MODIFICATION_DATETIME_FIELD = 'modification_datetime'
 API_INGESTION_DATETIME_FIELD = 'ingestion_datetime'
 API_DATETIME_FIELDS = [API_PUBLICATION_DATETIME_FIELD, API_MODIFICATION_DATETIME_FIELD, API_INGESTION_DATETIME_FIELD]
+API_GROUP_DIMENSIONS_FIELDS = [
+    'source_code', 'subject_codes', 'region_codes', 'industry_codes',
+    'company_codes', 'person_codes', 'company_codes_about',
+    'company_codes_relevance', 'company_codes_cusip', 'company_codes_isin',
+    'company_codes_sedol', 'company_codes_ticker', 'company_codes_about_cusip',
+    'company_codes_about_isin', 'company_codes_about_sedol',
+    'company_codes_about_ticker', 'company_codes_relevance_cusip',
+    'company_codes_relevance_isin', 'company_codes_relevance_sedol',
+    'company_codes_relevance_ticker'
+]
 
 # Streams
 API_STREAMS_BASEPATH = '/alpha/streams'
