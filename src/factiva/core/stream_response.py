@@ -84,8 +84,8 @@ class StreamResponse:
             dict which may contains links
 
         """
-        if data and 'links' in data:
-            self.links = self.parse_object(data['links'])
+        if data and data['self']:
+            self.links = self.parse_object(data)
 
     def parse_object(self, data, level=2):
         """Parse object representation per level of identation.
@@ -119,6 +119,7 @@ class StreamResponse:
     def __repr__(self):
         """Return the repr in the class intance."""
         return '''
+            -----------
             type: {}
             id: {}
             attributes: \n{}

@@ -1,5 +1,6 @@
+from .errors import *
+
 """Define library's constant literals."""
-# from factiva.core.const.errors import *
 
 API_HOST = 'https://api.dowjones.com'
 API_ACCOUNT_OAUTH2_HOST = 'https://accounts.dowjones.com/oauth2/v1/token'

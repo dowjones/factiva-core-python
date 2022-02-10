@@ -6,12 +6,12 @@ import json
 # from google.cloud.pubsub_v1 import SubscriberClient
 # from google.oauth2 import service_account
 
-from factiva.core import const, APIKeyUser
+from factiva.core import const, UserKey
 from .req import api_send_request
 # from factiva.core.stream_response import StreamResponse
 
 
-class StreamUser(APIKeyUser):
+class StreamUser(UserKey):
     """
     Implements the class that represents an Stream user.
 
