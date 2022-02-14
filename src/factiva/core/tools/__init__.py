@@ -19,6 +19,19 @@ def validate_type(var_to_validate, expected_type, error_message) -> bool:
     if not isinstance(var_to_validate, expected_type):
         raise ValueError(error_message)
 
+def validate_field_options(field, available_options):
+    """Validate that field is among the available options.
+
+    Parameters
+    ----------
+    field:
+        field to be validated, could be any type.
+    available_options:
+        options amongst field should be located.
+
+    """
+    if field not in available_options:
+        raise ValueError(f'Value {field} is not within the allowed options: {available_options}')
 
 def flatten_dict(multi_level_dict) -> dict:
     """Flatten a dictionary."""
