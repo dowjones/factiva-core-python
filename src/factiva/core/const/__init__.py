@@ -1,3 +1,5 @@
+import os
+
 from .errors import *
 
 """Define library's constant literals."""
@@ -27,6 +29,15 @@ API_SAMPLES_EXTRACTION_TYPE = "samples"
 API_SNAPSHOTS_TAXONOMY_BASEPATH = '/alpha/taxonomies'
 API_SNAPSHOTS_COMPANIES_BASEPATH = '/alpha/companies'
 API_SNAPSHOTS_COMPANY_IDENTIFIERS_BASEPATH = '/alpha/companies/identifiers'
+API_SNAPSHOTS_COMPANIES_PIT = '/pit'
+CUSIP_COMPANY_IDENTIFIER = 'cusip'
+ISIN_COMPANY_IDENTIFIER = 'isin'
+SEDOL_COMPANY_IDENTIFIER = 'sedol'
+TICKER_COMPANY_IDENTIFIER = 'ticker'
+API_COMPANIES_IDENTIFIER_TYPE = [
+    CUSIP_COMPANY_IDENTIFIER, ISIN_COMPANY_IDENTIFIER,
+    SEDOL_COMPANY_IDENTIFIER, TICKER_COMPANY_IDENTIFIER
+]
 
 # ANALYTICS
 API_AVRO_FORMAT = 'avro'
@@ -89,3 +100,6 @@ SNAPSHOT_FILE_STATS_FIELDS = ['an', 'company_codes', 'company_codes_about',
 
 SNAPSHOT_FILE_DELETE_FIELDS = ['art', 'credit', 'document_type',
     'publication_date', 'modfication_date'] # publication_date and modification_date are deprecated
+
+# Dowload options
+DOWNLOAD_DEFAULT_FOLDER = os.path.join(os.getcwd(), 'downloads')
