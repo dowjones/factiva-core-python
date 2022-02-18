@@ -71,7 +71,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     # Twelve is reasonable in this case.
 
     __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
-    __API_CLOUD_TOKEN_URL = f'{const.API_HOST}{const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH}'
+    __API_CLOUD_TOKEN_URL = f'{const.API_HOST}{const.ALPHA_BASEPATH}{const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH}'
 
     key = ''
     cloud_token = {}

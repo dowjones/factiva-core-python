@@ -10,7 +10,7 @@ API_LATEST_VERSION= "2.0"
 
 # UserKey
 API_ACCOUNT_BASEPATH = '/alpha/accounts'
-API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = '/alpha/accounts/streaming-credentials'
+API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = '/accounts/streaming-credentials'
 
 # Dynamic Prefixes
 ALPHA_BASEPATH = '/alpha'
