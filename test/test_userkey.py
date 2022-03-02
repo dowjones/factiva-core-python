@@ -1,3 +1,6 @@
+"""
+    Tests for the UserKey class
+"""
 import pytest
 from factiva.core import UserKey
 from factiva.core.tools import load_environment_value
@@ -51,71 +54,87 @@ DUMMY_KEY = 'abcd1234abcd1234abcd1234abcd1234'
 # }
 
 
-def check_UserKey_types(aku):
-    aku = UserKey(stats=True)
-    assert type(aku.key) == str
-    assert type(aku.cloud_token) == dict
-    assert type(aku.account_name) == str
-    assert type(aku.active_products) == str
-    assert type(aku.max_allowed_concurrent_extractions) == int
-    assert type(aku.max_allowed_extracted_documents) == int
-    assert type(aku.max_allowed_extractions) == int
-    assert type(aku.remaining_documents) == int
-    assert type(aku.remaining_extractions) == int
-    assert type(aku.total_downloaded_bytes) == int
-    assert type(aku.total_extracted_documents) == int
-    assert type(aku.total_extractions) == int
-    assert type(aku.total_stream_instances) == int
-    assert type(aku.total_stream_subscriptions) == int
-    assert type(aku.enabled_company_identifiers) == list
+def check_userkey_types(usr):
+    """"
+    Checks the correct types were returned.
+    """
+    usr = UserKey(stats=True)
+    assert isinstance(usr.key, str)
+    assert isinstance(usr.key, str)
+    assert isinstance(usr.cloud_token, dict)
+    assert isinstance(usr.account_name, str)
+    assert isinstance(usr.active_products, str)
+    assert isinstance(usr.max_allowed_concurrent_extractions, int)
+    assert isinstance(usr.max_allowed_extracted_documents, int)
+    assert isinstance(usr.max_allowed_extractions, int)
+    assert isinstance(usr.remaining_documents, int)
+    assert isinstance(usr.remaining_extractions, int)
+    assert isinstance(usr.total_downloaded_bytes, int)
+    assert isinstance(usr.total_extracted_documents, int)
+    assert isinstance(usr.total_extractions, int)
+    assert isinstance(usr.total_stream_instances, int)
+    assert isinstance(usr.total_stream_subscriptions, int)
+    assert isinstance(usr.enabled_company_identifiers, list)
 
 
-def test_UserKey_with_stats():
-    # Creates the object using the ENV variable and request the usage details to the API service
+def test_userkey_with_stats():
+    """"
+    Creates the object using the ENV variable and request the usage details to the API service
+    """
     aku = UserKey(stats=True)
-    check_UserKey_types(aku)
+    check_userkey_types(aku)
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
-def test_UserKey_without_stats():
-    # Creates an empty object from the ENV variable with a value only for the key property
+def test_userkey_without_stats():
+    """
+    Creates an empty object from the ENV variable with a value only for the key property
+    """
     aku = UserKey()
-    check_UserKey_types(aku)
+    check_userkey_types(aku)
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) == 0
     assert len(aku.active_products) == 0
 
 
 def test_user_with_parameter_and_stats():
-    # API Key is passed as a string and stats=True
+    """
+    API Key is passed as a string and stats=True
+    """
     aku = UserKey(key=FACTIVA_USERKEY, stats=True)
-    check_UserKey_types(aku)
+    check_userkey_types(aku)
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
 
 
-# Creates an empty object from the provided string with a value only for the key property
 def test_user_with_parameter_without_stats():
-    u = UserKey(DUMMY_KEY)
-    check_UserKey_types(u)
-    assert u.key == DUMMY_KEY
-    assert u.account_name == ''
-    assert u.active_products == ''
+    """
+    Creates an empty object from the provided string with a value only for the key property
+    """
+    usr = UserKey(DUMMY_KEY)
+    check_userkey_types(usr)
+    assert usr.key == DUMMY_KEY
+    assert usr.account_name == ''
+    assert usr.active_products == ''
 
 
 def test_invalid_key():
-    # Creates an object from the provided string and request the usage details to the API service
-    # The key is invalid and this should validate how the error is processed
+    """
+    Creates an object from the provided string and request the usage details to the API service
+    The key is invalid and this should validate how the error is processed
+    """
     with pytest.raises(ValueError, match=r'Factiva User-Key does not exist or inactive.'):
-        u = UserKey(DUMMY_KEY, stats=True)
-        assert u.account_name != ''
+        usr = UserKey(DUMMY_KEY, stats=True)
+        assert usr.account_name != ''
 
 
 def test_invald_lenght_key():
-    # Attempts to create an object with malformed keys. This requires assert the raised exception.
+    """
+    Attempts to create an object with malformed keys. This requires assert the raised exception.
+    """
     with pytest.raises(ValueError, match=r'Factiva User-Key has the wrong length'):
-        u = UserKey('abc')
-        assert u.account_name != ''
+        usr = UserKey('abc')
+        assert usr.account_name != ''
