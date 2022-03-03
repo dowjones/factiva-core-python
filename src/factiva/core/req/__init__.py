@@ -8,7 +8,9 @@ from datetime import datetime
 import requests
 
 from .. import const, tools
+from ..log import factiva_logger, get_factiva_logger
 
+log = get_factiva_logger()
 
 def send_get_request(endpoint_url=const.API_HOST,
                      headers=None,
@@ -36,7 +38,7 @@ def send_post_request(endpoint_url=const.API_HOST, headers=None, payload=None):
 
     return requests.post(endpoint_url, headers=headers)
 
-
+@factiva_logger()
 def api_send_request(method='GET',
                      endpoint_url=const.API_HOST,
                      headers=None,
@@ -74,6 +76,7 @@ def api_send_request(method='GET',
     return response
 
 
+@factiva_logger()
 def download_file(file_url,
                   headers,
                   file_name,
