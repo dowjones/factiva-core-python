@@ -6,6 +6,7 @@ from factiva.core import UserKey, const
 from google.cloud.pubsub_v1 import SubscriberClient
 from google.oauth2 import service_account
 
+from .log import factiva_logger, get_factiva_logger
 from .req import api_send_request
 
 
@@ -57,6 +58,7 @@ class StreamUser(UserKey):
     ):
         """Construct the object instance."""
         super().__init__(key, request_info)
+        self.log = get_factiva_logger()
 
     # # TODO: Please remove as this is a functionality that belongs to the News package
     # def get_streams(self) -> pd.DataFrame:
@@ -98,6 +100,7 @@ class StreamUser(UserKey):
     #     else:
     #         raise RuntimeError('Unexpected Get Streams API Error')
 
+    @factiva_logger()
     def fetch_credentials(self) -> dict:
         """Fetch the current headers and uri (v1 or v2).
 
@@ -170,6 +173,7 @@ class StreamUser(UserKey):
         '''
         raise ValueError(msg)
 
+    @factiva_logger()
     def get_client_subscription(self) -> SubscriberClient:
         """Obtain the subscriber client for pubsub.
 

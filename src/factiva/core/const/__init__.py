@@ -1,6 +1,10 @@
+from __future__ import absolute_import, division, print_function
+
 import os
 
+from ..tools import load_environment_value
 from .errors import *
+
 """Define library's constant literals."""
 API_HOST = 'https://api.dowjones.com'
 API_ACCOUNT_OAUTH2_HOST = 'https://accounts.dowjones.com/oauth2/v1/token'
@@ -105,9 +109,13 @@ SNAPSHOT_FILE_DELETE_FIELDS = [
     'art', 'credit', 'document_type', 'publication_date', 'modfication_date'
 ]  # publication_date and modification_date are deprecated
 
-# Dowload options
-DOWNLOAD_DEFAULT_FOLDER = os.path.join(os.getcwd(), 'downloads')
-FILES_DEFAULT_FOLDER = os.path.join(os.getcwd(), 'files')
+# Files options
+DOWNLOAD_DEFAULT_FOLDER = load_environment_value(
+    "DOWNLOAD_FILES_DIR", os.path.join(os.getcwd(), 'downloads'))
+LISTENER_FILES_DEFAULT_FOLDER = load_environment_value(
+    'STREAM_FILES_DIR', os.path.join(os.getcwd(), 'listener'))
+LOGS_DEFAULT_FOLDER = load_environment_value(
+    'LOG_FILES_DIR', os.path.join(os.getcwd(), 'logs'))
 
 #TIMESTAMP
 TIMESTAMP_FIELDS = [

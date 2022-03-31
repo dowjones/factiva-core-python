@@ -1,12 +1,13 @@
 import datetime
 import os
 
+from dateutil import parser
 from factiva.core import const
 
 
-def load_environment_value(config_key) -> str:
+def load_environment_value(config_key, default=None) -> str:
     """Obtain a environmental variable."""
-    tmp_val = os.getenv(config_key, None)
+    tmp_val = os.getenv(config_key, default)
     if tmp_val is None:
         raise Exception(
             "Environment Variable {} not found!".format(config_key))
@@ -53,7 +54,10 @@ def flatten_dict(multi_level_dict) -> dict:
 
 
 def isots_to_tsms(isodatestr: str) -> int:
-    return round(datetime.datetime.fromisoformat(isodatestr[:-1]).timestamp())
+    return round(
+        datetime.datetime.fromisoformat(
+            str(isodatestr).replace('&', '')
+        ).timestamp())
 
 
 def now_to_tsms() -> int:
@@ -75,6 +79,25 @@ def format_timestamps(message: dict) -> dict:
         if fieldname in message.keys():
             message[fieldname] = isots_to_tsms(message[fieldname])
     message["delivery_datetime"] = now_to_tsms()
+    return message
+
+
+def format_timestamps_mongodb(message: dict) -> dict:
+    """Format datetimes into mongodb datetime from a dict
+    Parameters
+    ----------
+    message:
+        dict with datetime values to be formated
+    Returns
+    -------
+    dict
+        Dict with datetimes formated
+    """
+    for fieldname in const.TIMESTAMP_FIELDS:
+        if fieldname in message.keys():
+            message[fieldname] = parser.parse(message[fieldname])
+    message["delivery_datetime"] = parser.parse(
+        datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     return message
 
 
