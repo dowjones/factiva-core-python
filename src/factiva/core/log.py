@@ -60,7 +60,7 @@ def factiva_logger(_func=None):
                     value = func(*args, **kwargs)
                 else:
                     value = func(self, *args, **kwargs)
-                logger_obj.info(f"Returned: - End function {value!r}")
+                logger_obj.info(f"Returned: - End function")
             except:
                 logger_obj.error(f"Exception: {str(sys.exc_info()[1])}")
                 raise
