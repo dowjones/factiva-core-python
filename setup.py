@@ -52,11 +52,12 @@ setup(
 
         'License :: OSI Approved :: MIT License',
 
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10'
     ],
-    keywords='news, news aggregator, risk, compliance, nlp, alternative data',
-    python_requires='>=3.6',
-    install_requires=['requests', 'pandas', 'numpy'],
+    keywords='news, factiva',
+    python_requires='>=3.7',
+    install_requires=['requests', 'pandas', 'numpy', 'fastavro'],
 )
