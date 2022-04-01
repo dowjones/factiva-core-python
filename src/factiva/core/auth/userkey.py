@@ -138,6 +138,14 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         """Account remaining documents."""
         return self.max_allowed_extracted_documents - self.total_extracted_documents
 
+    @property
+    def extractions_done(self):
+        return self.get_extractions()
+
+    @property
+    def streams_running(self):
+        return self.get_streams()
+
     @factiva_logger()
     def get_stats(self) -> bool:
         """Request the account details to the Factiva Account API Endpoint.
@@ -266,8 +274,14 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         return True
 
     @factiva_logger()
-    def get_extractions(self) -> pd.DataFrame:
+    def get_extractions(self, updates=False) -> pd.DataFrame:
         """Request a list of the extractions of the account.
+
+        Parameters
+        ----------
+        updates : bool
+            Flag that indicates whether the retrieved list should include (True)
+            or not (False) Snapshot Update calls.
 
         Returns
         -------
@@ -306,6 +320,9 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             extraction_df['update_id'] = ''
         extraction_df.drop(['self', 'type'], axis=1, inplace=True)
 
+        if not updates:
+            extraction_df = extraction_df.loc[extraction_df.update_id.isnull()]
+
         return extraction_df
 
 
@@ -328,18 +345,23 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         - RuntimeError when the API returns an unexpected error
 
         """
-        e = self.get_extractions()
-        if updates:
-            print(e.loc[:, e.columns != 'object_id'])
-        else:
-            print(e.loc[e.update_id.isnull(), e.columns != 'object_id'])
+        e = self.get_extractions(updates=updates)
+        print(e.loc[:, e.columns != 'object_id'])
+
 
     @factiva_logger()
-    def get_streams(self) -> pd.DataFrame:
+    def get_streams(self, running=True) -> pd.DataFrame:
         """Obtain streams from a given user.
 
         Function which returns the streams a given user with
         its respective key using the default stream url
+
+        Parameters
+        ----------
+        running : bool
+            Flag that indicates whether the retrieved list should be restricted
+            to only running streams (True) or also include cancelled and failed
+            ones (False).
 
         Returns
         -------
@@ -381,6 +403,10 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
                 stream_df['subscriptions'] = stream_df['data'].apply(lambda x: extract_subscriptions(x))
                 stream_df['n_subscriptions'] = stream_df['subscriptions'].str.len()
                 stream_df.drop(['self', 'type', 'data'], axis=1, inplace=True)
+
+                if running:
+                    stream_df = stream_df.loc[stream_df.job_status == const.API_JOB_RUNNING_STATE]
+
                 return stream_df
             except Exception:
                 raise AttributeError('Unexpected Get Streams API Response.')
@@ -417,11 +443,8 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             When API request returns unexpected error
 
         """
-        r = self.get_streams()
-        if running:
-            print(r.loc[r.job_status == const.API_JOB_RUNNING_STATE, r.columns != 'object_id'])
-        else:
-            print(r.loc[:, r.columns != 'object_id'])
+        r = self.get_streams(running=running)
+        print(r.loc[:, r.columns != 'object_id'])
 
 
     def __print_property__(self, property_value) -> str:
