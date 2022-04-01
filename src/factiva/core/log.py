@@ -53,7 +53,7 @@ def factiva_logger(_func=None):
                 'file_name_override': os.path.basename(py_file_caller.filename)
             }
             logger_obj.info(
-                f"Arguments: {formatted_arguments} - Begin function",
+                f"Begin function",
                 extra=extra_args)
             try:
                 if(self is None):

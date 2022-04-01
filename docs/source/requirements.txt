@@ -1,3 +1,2 @@
 factiva-core
-sphinx-rtd-theme
 fastavro

@@ -6,7 +6,7 @@ This package contains fundamental objects shared by other Factiva packages imple
 Check out the `Dow Jones Developer Platofrm site <https://developer.dowjones.com>`_ for more information about the available services.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Overview
    :glob:
 

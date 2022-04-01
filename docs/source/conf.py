@@ -19,10 +19,11 @@ sys.path.insert(0, os.path.abspath('../../src/factiva/core'))
 sys.path.insert(0, os.path.abspath('../../src/factiva/core/auth'))
 sys.path.insert(0, os.path.abspath('../../src/factiva/core/const'))
 sys.path.insert(0, os.path.abspath('../../src/factiva/core/dicts'))
+sys.path.insert(0, os.path.abspath('../../src/factiva/core/tools'))
 
 # -- Project information -----------------------------------------------------
 project = 'Factiva Core'
-copyright = '2021, Dow Jones'
+copyright = '2022, Dow Jones'
 author = 'Dow Jones'
 
 # The full version, including alpha/beta/rc tags
@@ -54,7 +55,7 @@ master_doc = 'index'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
