@@ -70,3 +70,19 @@ Loads the Industry hierarchy dataset which, among others, contain the Industry F
     2    i01001         Farming       i0
     3    i03001     Aquaculture   i01001
     4  i0100144   Cocoa Growing   i01001
+
+
+Using Proxy on requests
+----------------------------------
+To enable the proxy options on each request call, you need to set this environment variables
+
+.. code-block::
+
+    $ export HTTP_PROXY="http://10.10.1.10:3128"
+    $ export HTTPS_PROXY="http://10.10.1.10:1080"
+
+To use HTTP basic auth with your proxy, use the http://user:password@host/ syntax in any of the above configuration entries
+
+.. code-block::
+    
+    $ export HTTPS_PROXY="http://user:pass@10.10.1.10:1080"

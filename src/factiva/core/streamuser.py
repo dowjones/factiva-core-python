@@ -1,17 +1,16 @@
 """Factiva Core User Stream Class."""
 
 import json
-# import pandas as pd
 
-# from google.cloud.pubsub_v1 import SubscriberClient
-# from google.oauth2 import service_account
+from factiva.core import UserKey, const
+from google.cloud.pubsub_v1 import SubscriberClient
+from google.oauth2 import service_account
 
-from factiva.core import const, APIKeyUser
+from .log import factiva_logger, get_factiva_logger
 from .req import api_send_request
-# from factiva.core.stream_response import StreamResponse
 
 
-class StreamUser(APIKeyUser):
+class StreamUser(UserKey):
     """
     Implements the class that represents an Stream user.
 
@@ -49,6 +48,7 @@ class StreamUser(APIKeyUser):
     __API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH = const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH
     __DEFAULT_HOST_DNA = f'{const.API_HOST}{const.DNA_BASEPATH}'
     __DEFAULT_HOST_ALPHA = f'{const.API_HOST}{const.ALPHA_BASEPATH}'
+
     # __API_ENDPOINT_STREAM_URL = f'{const.API_HOST}{const.API_STREAMS_BASEPATH}/'
 
     def __init__(
@@ -58,6 +58,7 @@ class StreamUser(APIKeyUser):
     ):
         """Construct the object instance."""
         super().__init__(key, request_info)
+        self.log = get_factiva_logger()
 
     # # TODO: Please remove as this is a functionality that belongs to the News package
     # def get_streams(self) -> pd.DataFrame:
@@ -99,6 +100,7 @@ class StreamUser(APIKeyUser):
     #     else:
     #         raise RuntimeError('Unexpected Get Streams API Error')
 
+    @factiva_logger()
     def fetch_credentials(self) -> dict:
         """Fetch the current headers and uri (v1 or v2).
 
@@ -118,11 +120,12 @@ class StreamUser(APIKeyUser):
         """
         headers = self.get_authentication_headers()
         uri = self.get_uri_context()
-        response = api_send_request(
-            method="GET",
-            endpoint_url='{}{}'.format(uri, self.__API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH),
-            headers=headers
-        )
+        endpoint_url = '{}{}'.format(
+            uri, self.__API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH)
+
+        response = api_send_request(method="GET",
+                                    endpoint_url=endpoint_url,
+                                    headers=headers)
 
         if response.status_code == 401:
             message = '''
@@ -131,13 +134,13 @@ class StreamUser(APIKeyUser):
                 '''.format(headers)
             raise RuntimeError(message)
         try:
-            streaming_credentials_string = response.json()['data']['attributes']['streaming_credentials']
+            response_data = response.json()
+            streaming_credentials_string = response_data['data']['attributes'][
+                'streaming_credentials']
         except KeyError:
-            raise ValueError(
-                '''
+            raise ValueError('''
                 Unable to find streaming credentials for given account
-                '''
-            )
+                ''')
 
         return json.loads(streaming_credentials_string)
 
@@ -170,35 +173,33 @@ class StreamUser(APIKeyUser):
         '''
         raise ValueError(msg)
 
-    # def get_client_subscription(self) -> SubscriberClient:
-    #     """Obtain the subscriber client for pubsub.
+    @factiva_logger()
+    def get_client_subscription(self) -> SubscriberClient:
+        """Obtain the subscriber client for pubsub.
 
-    #     The credentials are obtained from fetch_credentials() function
-    #     These credentials are used to authenticate with Google services
-    #     If all is correct, it will be created a SubscriberClient for Pubsub
+        The credentials are obtained from fetch_credentials() function
+        These credentials are used to authenticate with Google services
+        If all is correct, it will be created a SubscriberClient for Pubsub
 
-    #     Returns
-    #     -------
-    #     SubscriberClient object from google cloud library used for Pubsub
+        Returns
+        -------
+        SubscriberClient object from google cloud library used for Pubsub
 
-    #     Raises
-    #     ------
-    #     RuntimeError: When the Pubsub client cannot be created
+        Raises
+        ------
+        RuntimeError: When the Pubsub client cannot be created
 
-    #     """
-    #     streaming_credentials = self.fetch_credentials()
-    #     try:
-    #         credentials = service_account.Credentials.from_service_account_info(
-    #             streaming_credentials
-    #         )
+        """
+        streaming_credentials = self.fetch_credentials()
+        try:
+            credentials = service_account.Credentials.from_service_account_info(
+                streaming_credentials)
 
-    #         return SubscriberClient(credentials=credentials)
-    #     except Exception:
-    #         raise RuntimeError(
-    #             '''
-    #             Something unexpected happened while creating Pubsub client
-    #             '''
-    #         )
+            return SubscriberClient(credentials=credentials)
+        except Exception:
+            raise RuntimeError('''
+                Something unexpected happened while creating Pubsub client
+                ''')
 
     def get_authentication_headers(self) -> dict:
         """Obtain the current auhtentication headers.

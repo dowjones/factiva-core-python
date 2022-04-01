@@ -1,9 +1,12 @@
 """Factiva Core UserKey Class."""
 import json
+
 import pandas as pd
-from ..req import api_send_request
-from ..tools import load_environment_value, mask_string, flatten_dict
 from factiva.core import const
+
+from ..log import factiva_logger, get_factiva_logger
+from ..req import api_send_request
+from ..tools import flatten_dict, load_environment_value, mask_string
 
 
 class UserKey:  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
@@ -71,7 +74,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     # Twelve is reasonable in this case.
 
     __API_ENDPOINT_BASEURL = f'{const.API_HOST}{const.API_ACCOUNT_BASEPATH}/'
-    __API_CLOUD_TOKEN_URL = f'{const.API_HOST}{const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH}'
+    __API_CLOUD_TOKEN_URL = f'{const.API_HOST}{const.ALPHA_BASEPATH}{const.API_ACCOUNT_STREAM_CREDENTIALS_BASEPATH}'
 
     key = ''
     cloud_token = {}
@@ -89,18 +92,16 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
     total_stream_subscriptions = 0
     enabled_company_identifiers = []
 
-
-    def __init__(
-        self,
-        key=None,
-        stats=False
-    ):
+    def __init__(self, key=None, stats=False):
         """Construct the instance of the class."""
+        self.log = get_factiva_logger()
         if key is None:
             try:
                 key = load_environment_value('FACTIVA_USERKEY')
             except Exception:
-                raise ValueError('Factiva user key not provided and environment variable FACTIVA_USERKEY not set.')
+                raise ValueError(
+                    'Factiva user key not provided and environment variable FACTIVA_USERKEY not set.'
+                )
 
         if len(key) != 32:
             raise ValueError('Factiva User-Key has the wrong length')
@@ -137,7 +138,15 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         """Account remaining documents."""
         return self.max_allowed_extracted_documents - self.total_extracted_documents
 
+    @property
+    def extractions_done(self):
+        return self.get_extractions()
 
+    @property
+    def streams_running(self):
+        return self.get_streams()
+
+    @factiva_logger()
     def get_stats(self) -> bool:
         """Request the account details to the Factiva Account API Endpoint.
 
@@ -220,7 +229,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             raise RuntimeError('Unexpected Account Information API Error')
         return True
 
-
+    @factiva_logger()
     def get_cloud_token(self) -> bool:
         """
         Request a cloud token to the API and saves its value
@@ -264,9 +273,15 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         self.cloud_token = json.loads(streaming_credentials_string)
         return True
 
-
-    def get_extractions(self) -> pd.DataFrame:
+    @factiva_logger()
+    def get_extractions(self, updates=False) -> pd.DataFrame:
         """Request a list of the extractions of the account.
+
+        Parameters
+        ----------
+        updates : bool
+            Flag that indicates whether the retrieved list should include (True)
+            or not (False) Snapshot Update calls.
 
         Returns
         -------
@@ -305,6 +320,9 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             extraction_df['update_id'] = ''
         extraction_df.drop(['self', 'type'], axis=1, inplace=True)
 
+        if not updates:
+            extraction_df = extraction_df.loc[extraction_df.update_id.isnull()]
+
         return extraction_df
 
 
@@ -327,18 +345,23 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         - RuntimeError when the API returns an unexpected error
 
         """
-        e = self.get_extractions()
-        if updates:
-            print(e.loc[:, e.columns != 'object_id'])
-        else:
-            print(e.loc[e.update_id.isnull(), e.columns != 'object_id'])
+        e = self.get_extractions(updates=updates)
+        print(e.loc[:, e.columns != 'object_id'])
 
 
-    def get_streams(self) -> pd.DataFrame:
+    @factiva_logger()
+    def get_streams(self, running=True) -> pd.DataFrame:
         """Obtain streams from a given user.
 
         Function which returns the streams a given user with
         its respective key using the default stream url
+
+        Parameters
+        ----------
+        running : bool
+            Flag that indicates whether the retrieved list should be restricted
+            to only running streams (True) or also include cancelled and failed
+            ones (False).
 
         Returns
         -------
@@ -362,12 +385,15 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         )
         if response.status_code == 200:
             try:
-                def extract_subscriptions(x):
-                    r = []
-                    for i in x:
-                        r.append(i['id'])
-                    return r
-                
+                def extract_subscriptions(subscription):
+                    # Fixed issue#12 (https://github.com/dowjones/factiva-core-python/issues/12)
+                    id_list = []
+                    for i in subscription:
+                        s_idp = i['id'].split('-')
+                        s_id = f"{s_idp[-3]}-{s_idp[-2]}-{s_idp[-1]}"
+                        id_list.append(s_id)
+                    return id_list
+
                 response_data = response.json()
                 stream_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
                 stream_df.rename(columns={'id': 'object_id'}, inplace=True)
@@ -375,7 +401,12 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
                 stream_df['stream_id'] = ids_df[4]
                 stream_df['stream_type'] = ids_df[2]
                 stream_df['subscriptions'] = stream_df['data'].apply(lambda x: extract_subscriptions(x))
+                stream_df['n_subscriptions'] = stream_df['subscriptions'].str.len()
                 stream_df.drop(['self', 'type', 'data'], axis=1, inplace=True)
+
+                if running:
+                    stream_df = stream_df.loc[stream_df.job_status == const.API_JOB_RUNNING_STATE]
+
                 return stream_df
             except Exception:
                 raise AttributeError('Unexpected Get Streams API Response.')
@@ -412,11 +443,8 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             When API request returns unexpected error
 
         """
-        r = self.get_streams()
-        if running:
-            print(r.loc[r.job_status == const.API_JOB_RUNNING_STATE, r.columns != 'object_id'])
-        else:
-            print(r.loc[:, r.columns != 'object_id'])
+        r = self.get_streams(running=running)
+        print(r.loc[:, r.columns != 'object_id'])
 
 
     def __print_property__(self, property_value) -> str:
@@ -453,7 +481,6 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         else:
             ret_val += f'{prefix}...'
         return ret_val
-
 
     @staticmethod
     def create_user_key(key=None, stats=False):

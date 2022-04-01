@@ -89,14 +89,3 @@ def flatten_dict(multi_level_dict):
             flattened_dict[entry] = multi_level_dict[entry]
 
     return flattened_dict
-
-# Apparently unused
-# def load_generic_env_variable(variable, env_var):
-#     """Load generic env variable."""
-#     if not variable:
-#         try:
-#             return load_environment_value(f'{env_var}')
-#         except Exception:
-#             return variable
-
-#     return variable
