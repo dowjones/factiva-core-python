@@ -2,64 +2,64 @@
 World*,WORLD,,0
 Africa,AFRICAZ,WORLD,1
 Americas*,AMRCSZ,WORLD,1
-Asia Pacific,APACZ,WORLD,1
+Asia Pacific,APACZ,WORLD,1
 Asia,ASIAZ,WORLD,1
 Europe,EURZ,WORLD,1
 Australia/Oceania*,AUSNUZ,APACZ,2
-Central America*,CAMUZ,AMRCSZ,2
-Caribbean Islands*,CARIBUZ,AMRCSZ,2
-Central Asia*,CASIAUZ,ASIAZ,2
-Central Africa*,CEAFRUZ,AFRICAZ,2
-East Africa*,EAFRUZ,AFRICAZ,2
-Eastern Asia*,EASIAUZ,ASIAZ,2
-Central/Eastern Europe*,EEURUZ,EURZ,2
+Central America*,CAMUZ,AMRCSZ,2
+Caribbean Islands*,CARIBUZ,AMRCSZ,2
+Central Asia*,CASIAUZ,ASIAZ,2
+Central Africa*,CEAFRUZ,AFRICAZ,2
+East Africa*,EAFRUZ,AFRICAZ,2
+Eastern Asia*,EASIAUZ,ASIAZ,2
+Central/Eastern Europe*,EEURUZ,EURZ,2
 Europe*,EURUZ,EURZ,2
-North Africa*,NAFRUZ,AFRICAZ,2
-North America*,NAMUZ,AMRCSZ,2
-Nordic Countries*,NORDUZ,EURZ,2
-South America*,SAMUZ,AMRCSZ,2
-Southern Asia*,SASIAUZ,ASIAZ,2
-Southeast Asia*,SEASIAUZ,ASIAZ,2
-Southern Africa*,SOUAFRUZ,AFRICAZ,2
-West Africa*,WAFRUZ,AFRICAZ,2
-Western Asia*,WASIAUZ,ASIAZ,2
-Western Europe*,WEURUZ,EURZ,2
+North Africa*,NAFRUZ,AFRICAZ,2
+North America*,NAMUZ,AMRCSZ,2
+Nordic Countries*,NORDUZ,EURZ,2
+South America*,SAMUZ,AMRCSZ,2
+Southern Asia*,SASIAUZ,ASIAZ,2
+Southeast Asia*,SEASIAUZ,ASIAZ,2
+Southern Africa*,SOUAFRUZ,AFRICAZ,2
+West Africa*,WAFRUZ,AFRICAZ,2
+Western Asia*,WASIAUZ,ASIAZ,2
+Western Europe*,WEURUZ,EURZ,2
 Australia/Oceania,AUSNZ,AUSNUZ,3
-Balkan States,BALKZ,EURUZ,3
-Baltic States,BALTST,EEURUZ,3
-Benelux Countries,BENLUXZ,WEURUZ,3
-Central America,CAMZ,CAMUZ,3
-Caribbean Islands,CARIBZ,CARIBUZ,3
-Central Asia,CASIAZ,CASIAUZ,3
-Central Africa,CEAFRZ,CEAFRUZ,3
-Greater China,CHINAZ,EASIAUZ,3
-DACH Countries,DACH,WEURUZ,3
-East Africa,EAFRZ,EAFRUZ,3
-Eastern Asia,EASIAZ,EASIAUZ,3
-Central/Eastern Europe,EEURZ,EEURUZ,3
-Persian Gulf Region,GULFSTZ,WASIAUZ,3
+Balkan States,BALKZ,EURUZ,3
+Baltic States,BALTST,EEURUZ,3
+Benelux Countries,BENLUXZ,WEURUZ,3
+Central America,CAMZ,CAMUZ,3
+Caribbean Islands,CARIBZ,CARIBUZ,3
+Central Asia,CASIAZ,CASIAUZ,3
+Central Africa,CEAFRZ,CEAFRUZ,3
+Greater China,CHINAZ,EASIAUZ,3
+DACH Countries,DACH,WEURUZ,3
+East Africa,EAFRZ,EAFRUZ,3
+Eastern Asia,EASIAZ,EASIAUZ,3
+Central/Eastern Europe,EEURZ,EEURUZ,3
+Persian Gulf Region,GULFSTZ,WASIAUZ,3
 Indo-China,INDOCHZ,SEASIAUZ,3
-Indian Subcontinent,INDSUBZ,SASIAUZ,3
-North Africa,NAFRZ,NAFRUZ,3
-North America,NAMZ,NAMUZ,3
-Nordic Countries,NORDZ,NORDUZ,3
-Pacific Islands,PACISZ,AUSNUZ,3
-South America,SAMZ,SAMUZ,3
-Southern Asia,SASIAZ,SASIAUZ,3
+Indian Subcontinent,INDSUBZ,SASIAUZ,3
+North Africa,NAFRZ,NAFRUZ,3
+North America,NAMZ,NAMUZ,3
+Nordic Countries,NORDZ,NORDUZ,3
+Pacific Islands,PACISZ,AUSNUZ,3
+South America,SAMZ,SAMUZ,3
+Southern Asia,SASIAZ,SASIAUZ,3
 Scandinavia,SCANDZ,NORDUZ,3
-Southeast Asia,SEASIAZ,SEASIAUZ,3
-Southern Africa,SOUAFRZ,SOUAFRUZ,3
-West Africa,WAFRZ,WAFRUZ,3
-Western Asia,WASIAZ,WASIAUZ,3
-Western Europe,WEURZ,WEURUZ,3
+Southeast Asia,SEASIAZ,SEASIAUZ,3
+Southern Africa,SOUAFRZ,SOUAFRUZ,3
+West Africa,WAFRZ,WAFRUZ,3
+Western Asia,WASIAZ,WASIAUZ,3
+Western Europe,WEURZ,WEURUZ,3
 Australia,AUSTR,AUSNZ,4
 New Zealand,NZ,AUSNZ,4
 Albania,ALB,BALKZ,4
-Bosnia and Herzegovina,BSHZG,BALKZ,4
+Bosnia and Herzegovina,BSHZG,BALKZ,4
 Bulgaria,BUL,BALKZ,4
 Croatia,CRTIA,BALKZ,4
 Greece,GREECE,BALKZ,4
-North Macedonia,MCDNIA,BALKZ,4
+North Macedonia,MCDNIA,BALKZ,4
 Romania,ROM,BALKZ,4
 Slovenia,SLVNIA,BALKZ,4
 Turkey,TURK,BALKZ,4
@@ -92,8 +92,8 @@ Turkmenistan,TURKM,CASIAZ,4
 Uzbekistan,UZBK,CASIAZ,4
 Cameroon,CAMER,CEAFRZ,4
 Central African Republic,CAFR,CEAFRZ,4
-Congo Republic,CONGO,CEAFRZ,4
-Democratic Republic of the Congo,ZAIRE,CEAFRZ,4
+Congo Republic,CONGO,CEAFRZ,4
+Democratic Republic of the Congo,ZAIRE,CEAFRZ,4
 Equatorial Guinea,EQGNA,CEAFRZ,4
 Gabon,GABON,CEAFRZ,4
 São Tomé & Príncipe,PST,CEAFRZ,4
@@ -144,7 +144,7 @@ Morocco,MOROC,NAFRZ,4
 Tunisia,TUNIS,NAFRZ,4
 Canada,CANA,NAMZ,4
 Mexico,MEX,NAMZ,4
-United States,USA,NAMZ,4
+United States,USA,NAMZ,4
 Finland,FIN,NORDZ,4
 Iceland,ICEL,NORDZ,4
 Fiji,FIJI,PACISZ,4
@@ -294,7 +294,7 @@ Svalbard & Jan Mayen,SVALB,NORDZ,4
 Tokelau,TOKLAU,PACISZ,4
 Trinidad & Tobago,TRTO,CARIBZ,4
 Turks & Caicos Islands,TCAI,CARIBZ,4
-United Kingdom,UK,WEURZ,4
+United Kingdom,UK,WEURZ,4
 U.S. Virgin Islands,VI,CARIBZ,4
 Wallis and Futuna Islands,WALLIS,PACISZ,4
 Western Sahara,SPSAH,WAFRZ,4
