@@ -310,14 +310,17 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         extraction_df = pd.DataFrame([flatten_dict(extraction) for extraction in response_data['data']])
         extraction_df.rename(columns={'id': 'object_id'}, inplace=True)
         ids_df = extraction_df['object_id'].str.split('-', expand=True)
-        if len(ids_df) >= 4:
+
+        if ids_df.shape[1] >= 5:
             extraction_df['snapshot_sid'] = ids_df[4]
         else:
-            extraction_df['snapshot_sid'] = ''
-        if len(ids_df) >= 6:
+            extraction_df['snapshot_sid'] = None
+
+        if ids_df.shape[1] >= 7:
             extraction_df['update_id'] = ids_df[6]
         else:
-            extraction_df['update_id'] = ''
+            extraction_df['update_id'] = None
+        
         extraction_df.drop(['self', 'type'], axis=1, inplace=True)
 
         if not updates:
