@@ -20,5 +20,6 @@ Check out the `Dow Jones Developer Platofrm site <https://developer.dowjones.com
    :glob:
 
    factiva.core/auth
-   factiva.core/const
+   factiva.core/tools
    factiva.core/dicts
+   factiva.core/const

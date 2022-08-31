@@ -219,7 +219,7 @@ Switzerland,Switzerland,CH,CHE,CHF,Swiss Franc,Bern,V8,,"de-CH,fr-CH,it-CH,rm",,
 Syria,Syrian Arab Republic,SY,SYR,SYP,Syrian Pound,Damascus,V9,,"ar-SY,ku,hy,arc,fr,en",,World,Asia,AS,Western Asia,,SYRIA,WASIAZ,.sy,Yes
 Tajikistan,Tajikistan,TJ,TJK,TJS,Somoni,Dushanbe,2D,x,"tg,ru",,World,Asia,AS,Central Asia,,TADZK,CASIAZ,.tj,Yes
 Thailand,Thailand,TH,THA,THB,Baht,Bangkok,W1,,"th,en",,World,Asia,AS,South-eastern Asia,,THAIL,SEASIAZ,.th,Yes
-North Macedonia,The former Yugoslav Republic of Macedonia,MK,MKD,MKD,Denar,Skopje,,x,"mk,sq,tr,rmm,sr",,World,Europe,EU,Southern Europe,,MCDNIA,BALKZ,.mk,Yes
+North Macedonia,The former Yugoslav Republic of Macedonia,MK,MKD,MKD,Denar,Skopje,,x,"mk,sq,tr,rmm,sr",,World,Europe,EU,Southern Europe,,MCDNIA,BALKZ,.mk,Yes
 Timor-Leste,Timor-Leste,TL,TLS,USD,US Dollar,Dili,Z3,,"tet,pt-TL,id,en",x,World,Asia,OC,South-eastern Asia,,TIMOR,SEASIAZ,.tl,Yes
 Togo,Togo,TG,TGO,XOF,CFA Franc BCEAO,Lome,W2,,"fr-TG,ee,hna,kbp,dag,ha",x,World,Africa,AF,Sub-Saharan Africa,Western Africa,TOGO,WAFRZ,.tg,Yes
 Tokelau,Tokelau,TK,TKL,NZD,New Zealand Dollar,,W3,,"tkl,en-TK",,World,Oceania,OC,Polynesia,,TOKLAU,PACISZ,.tk,Territory of NZ
@@ -233,11 +233,11 @@ Tuvalu,Tuvalu,TV,TUV,AUD,Australian Dollar,Funafuti,2G,,"tvl,en,sm,gil",x,World,
 Uganda,Uganda,UG,UGA,UGX,Uganda Shilling,Kampala,W9,x,"en-UG,lg,sw,ar",x,World,Africa,AF,Sub-Saharan Africa,Eastern Africa,UGANDA,EAFRZ,.ug,Yes
 Ukraine,Ukraine,UA,UKR,UAH,Hryvnia,Kiev,2H,,"uk,ru-UA,rom,pl,hu",,World,Europe,EU,Eastern Europe,,UKRN,EEURZ,.ua,Yes
 United Arab Emirates,United Arab Emirates,AE,ARE,AED,UAE Dirham,Abu Dhabi,C0,,"ar-AE,fa,en,hi,ur",,World,Asia,AS,Western Asia,,UAE,GULFSTZ,.ae,Yes
-United Kingdom,United Kingdom of Great Britain and Northern Ireland,GB,GBR,GBP,Pound Sterling,London,,,"en-GB,cy-GB,gd",,World,Europe,EU,Northern Europe,,UK,WEURZ,.uk,Yes
+United Kingdom,United Kingdom of Great Britain and Northern Ireland,GB,GBR,GBP,Pound Sterling,London,,,"en-GB,cy-GB,gd",,World,Europe,EU,Northern Europe,,UK,WEURZ,.uk,Yes
 Tanzania,United Republic of Tanzania,TZ,TZA,TZS,Tanzanian Shilling,Dodoma,W0,,"sw-TZ,en,ar",x,World,Africa,AF,Sub-Saharan Africa,Eastern Africa,TANZA,EAFRZ,.tz,Yes
 U.S. Outlying Islands,United States Minor Outlying Islands,UM,UMI,USD,US Dollar,,2J,,en-UM,,World,Oceania,OC,Micronesia,,,,.um,Territories of US
 U.S. Virgin Islands,United States Virgin Islands,VI,VIR,USD,US Dollar,Charlotte Amalie,,,en-VI,,World,Americas,NA,Latin America and the Caribbean,Caribbean,VI,CARIBZ,.vi,Territory of US
-United States,United States of America,US,USA,USD,US Dollar,Washington,,,"en-US,es-US,haw,fr",,World,Americas,NA,Northern America,,USA,NAMZ,.us,Yes
+United States,United States of America,US,USA,USD,US Dollar,Washington,,,"en-US,es-US,haw,fr",,World,Americas,NA,Northern America,,USA,NAMZ,.us,Yes
 Uruguay,Uruguay,UY,URY,UYU,Peso Uruguayo,Montevideo,X3,,es-UY,,World,Americas,SA,Latin America and the Caribbean,South America,URU,SAMZ,.uy,Yes
 Uzbekistan,Uzbekistan,UZ,UZB,UZS,Uzbekistan Sum,Tashkent,2K,x,"uz,ru,tg",,World,Asia,AS,Central Asia,,UZBK,CASIAZ,.uz,Yes
 Vanuatu,Vanuatu,VU,VUT,VUV,Vatu,Port Vila,2L,,"bi,en-VU,fr-VU",x,World,Oceania,OC,Melanesia,,VANU,PACISZ,.vu,Yes
