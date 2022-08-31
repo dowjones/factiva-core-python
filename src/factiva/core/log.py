@@ -41,28 +41,28 @@ def factiva_logger(_func=None):
         @functools.wraps(func)
         def factiva_log(self=None, *args, **kwargs):
             logger_obj = get_factiva_logger()
-            args_passed_in_function = [repr(a) for a in args]
-            kwargs_passed_in_function = [
-                f"{k}={v!r}" for k, v in kwargs.items()
-            ]
-            formatted_arguments = ", ".join(args_passed_in_function +
-                                            kwargs_passed_in_function)
+            # args_passed_in_function = [repr(a) for a in args]
+            # kwargs_passed_in_function = [
+            #     f"{k}={v!r}" for k, v in kwargs.items()
+            # ]
+            # formatted_arguments = ", ".join(args_passed_in_function +
+            #                                 kwargs_passed_in_function)
             py_file_caller = getframeinfo(stack()[1][0])
             extra_args = {
                 'func_name_override': func.__name__,
                 'file_name_override': os.path.basename(py_file_caller.filename)
             }
-            logger_obj.info(
-                f"Begin function",
+            logger_obj.debug(
+                "Begin function",
                 extra=extra_args)
             try:
                 if(self is None):
                     value = func(*args, **kwargs)
                 else:
                     value = func(self, *args, **kwargs)
-                logger_obj.info(f"Returned: - End function")
+                logger_obj.debug("End function")
             except:
-                logger_obj.error(f"Exception: {str(sys.exc_info()[1])}")
+                logger_obj.error("Exception: {}".format(str(sys.exc_info()[1])))
                 raise
             return value
 
