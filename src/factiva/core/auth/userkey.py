@@ -9,7 +9,7 @@ from ..req import api_send_request
 from ..tools import flatten_dict, load_environment_value, mask_string
 
 
-class UserKey:  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
+class UserKey:
     """Class that represents an API user. This entity is identifiable by a User Key.
 
     Parameters
@@ -140,10 +140,12 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
 
     @property
     def extractions_done(self):
+        """Number of executed extractions"""
         return self.get_extractions()
 
     @property
     def streams_running(self):
+        """Number of currently running Streaming Instances"""
         return self.get_streams()
 
     @factiva_logger()
@@ -204,10 +206,9 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         account_endpoint = f'{self.__API_ENDPOINT_BASEURL}{self.key}'
         req_head = {'user-key': self.key}
         resp = api_send_request(method='GET', endpoint_url=account_endpoint, headers=req_head)
-        # resp = requests.get(account_endpoint, headers=req_head)  # TODO: Remove if OK
         if resp.status_code == 200:
             try:
-                resp_obj = eval(resp.text)
+                resp_obj = json.loads(resp.text)
                 self.account_name = resp_obj['data']['attributes']['name']
                 self.account_type = resp_obj['data']['type']
                 self.active_products = resp_obj['data']['attributes']['products']
@@ -320,7 +321,7 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             extraction_df['update_id'] = ids_df[6]
         else:
             extraction_df['update_id'] = None
-        
+
         extraction_df.drop(['self', 'type'], axis=1, inplace=True)
 
         if not updates:
@@ -348,8 +349,8 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
         - RuntimeError when the API returns an unexpected error
 
         """
-        e = self.get_extractions(updates=updates)
-        print(e.loc[:, e.columns != 'object_id'])
+        extractions = self.get_extractions(updates=updates)
+        print(extractions.loc[:, extractions.columns != 'object_id'])
 
 
     @factiva_logger()
@@ -446,12 +447,12 @@ class UserKey:  # TODO: Create a DJUserBase class that defines root properties f
             When API request returns unexpected error
 
         """
-        r = self.get_streams(running=running)
-        print(r.loc[:, r.columns != 'object_id'])
+        account_streams = self.get_streams(running=running)
+        print(account_streams.loc[:, account_streams.columns != 'object_id'])
 
 
     def __print_property__(self, property_value) -> str:
-        if type(property_value) == int:
+        if isinstance(property_value, int):
             pval = f'{property_value:,d}'
         else:
             pval = property_value

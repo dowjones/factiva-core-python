@@ -6,7 +6,7 @@ from ..tools import load_environment_value, mask_string, flatten_dict
 from factiva.core import const
 
 
-class OAuthUser:  # TODO: Create a DJUserBase class that defines root properties for all user types, and inherit here.
+class OAuthUser:
     """Class that represents an API user. This entity is identifiable by a User Key.
 
     Parameters
@@ -33,7 +33,7 @@ class OAuthUser:  # TODO: Create a DJUserBase class that defines root properties
         username=None,
         password=None
     ):
-        """Construct the instance of the class."""
+        """Constructs the instance of the class."""
         if client_id is None:
             try:
                 self.client_id = load_environment_value('FACTIVA_CLIENTID')
@@ -83,8 +83,6 @@ class OAuthUser:  # TODO: Create a DJUserBase class that defines root properties
         ret_val = f'{root_prefix}{str(self.__class__)}\n'
         if detailed:
             ret_val += '\n'.join((f'{prefix}{item} = {self.__print_property__(pprop[item])}' for item in pprop))
-            ret_val += f'\n{prefix}remaining_documents = {self.__print_property__(self.remaining_documents)}\n'
-            ret_val += f'{prefix}remaining_extractions = {self.__print_property__(self.remaining_extractions)}\n'
         else:
             ret_val += f'{prefix}...'
         return ret_val
