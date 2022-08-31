@@ -5,6 +5,7 @@ Factiva authentication modules and classes
 userKey class
 *************
 
-.. autoclass:: factiva.core.auth.userkey.UserKey
+.. automodule:: factiva.core.auth
+   :members:
    :undoc-members:
    :show-inheritance:
