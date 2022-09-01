@@ -1,9 +1,5 @@
 """Factiva Core OAuthUser Class."""
-import json
-import pandas as pd
-from ..req import api_send_request
-from ..tools import load_environment_value, mask_string, flatten_dict
-from factiva.core import const
+from ..tools import load_environment_value
 
 
 class OAuthUser:
@@ -37,34 +33,32 @@ class OAuthUser:
         if client_id is None:
             try:
                 self.client_id = load_environment_value('FACTIVA_CLIENTID')
-            except:
-                raise ValueError('Factiva client ID not provided and environment variable FACTIVA_CLIENTID not set.')
+            except Exception as error:
+                raise ValueError('Factiva client ID not provided and environment variable FACTIVA_CLIENTID not set.') from error
 
         if username is None:
             try:
                 self.username = load_environment_value('FACTIVA_USERNAME')
-            except:
-                raise ValueError('Factiva username not provided and environment variable FACTIVA_USERNAME not set.')
+            except Exception as error:
+                raise ValueError('Factiva username not provided and environment variable FACTIVA_USERNAME not set.') from error
 
         if password is None:
             try:
                 self.password = load_environment_value('FACTIVA_PASSWORD')
-            except:
-                raise ValueError('Factiva password not provided and environment variable FACTIVA_PASSWORD not set.')
+            except Exception as error:
+                raise ValueError('Factiva password not provided and environment variable FACTIVA_PASSWORD not set.') from error
 
 
     def get_auth_token(self):
         """To be implemented"""
-        pass
 
 
     def get_jwt_token(self):
         """To be implemented"""
-        pass
 
 
     def __print_property__(self, property_value) -> str:
-        if type(property_value) == int:
+        if isinstance(property_value, int):
             pval = f'{property_value:,d}'
         else:
             pval = property_value
@@ -77,7 +71,6 @@ class OAuthUser:
 
 
     def __str__(self, detailed=True, prefix='  |-', root_prefix=''):
-        # TODO: Improve the output for enabled_company_identifiers
         pprop = self.__dict__.copy()
 
         ret_val = f'{root_prefix}{str(self.__class__)}\n'

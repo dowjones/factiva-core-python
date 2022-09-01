@@ -60,7 +60,6 @@ def check_userkey_types(usr):
     """
     usr = UserKey(stats=True)
     assert isinstance(usr.key, str)
-    assert isinstance(usr.key, str)
     assert isinstance(usr.cloud_token, dict)
     assert isinstance(usr.account_name, str)
     assert isinstance(usr.active_products, str)
@@ -86,6 +85,15 @@ def test_userkey_with_stats():
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
+    assert aku.max_allowed_concurrent_extractions >= 0
+    assert aku.max_allowed_extracted_documents >= 0
+    assert aku.max_allowed_extractions >= 0
+    assert aku.total_downloaded_bytes >= 0
+    assert aku.total_extracted_documents >= 0
+    assert aku.total_extractions >= 0
+    assert aku.total_stream_instances >= 0
+    assert aku.total_stream_subscriptions >= 0
+    assert len(aku.enabled_company_identifiers) > 0
 
 
 def test_userkey_without_stats():
@@ -97,6 +105,15 @@ def test_userkey_without_stats():
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) == 0
     assert len(aku.active_products) == 0
+    assert aku.max_allowed_concurrent_extractions == 0
+    assert aku.max_allowed_extracted_documents == 0
+    assert aku.max_allowed_extractions == 0
+    assert aku.total_downloaded_bytes == 0
+    assert aku.total_extracted_documents == 0
+    assert aku.total_extractions == 0
+    assert aku.total_stream_instances == 0
+    assert aku.total_stream_subscriptions == 0
+    assert len(aku.enabled_company_identifiers) == 0
 
 
 def test_user_with_parameter_and_stats():
@@ -108,6 +125,15 @@ def test_user_with_parameter_and_stats():
     assert aku.key == FACTIVA_USERKEY
     assert len(aku.account_name) > 0
     assert len(aku.active_products) > 0
+    assert aku.max_allowed_concurrent_extractions >= 0
+    assert aku.max_allowed_extracted_documents >= 0
+    assert aku.max_allowed_extractions >= 0
+    assert aku.total_downloaded_bytes >= 0
+    assert aku.total_extracted_documents >= 0
+    assert aku.total_extractions >= 0
+    assert aku.total_stream_instances >= 0
+    assert aku.total_stream_subscriptions >= 0
+    assert len(aku.enabled_company_identifiers) > 0
 
 
 def test_user_with_parameter_without_stats():
@@ -119,6 +145,15 @@ def test_user_with_parameter_without_stats():
     assert usr.key == DUMMY_KEY
     assert usr.account_name == ''
     assert usr.active_products == ''
+    assert usr.max_allowed_concurrent_extractions == 0
+    assert usr.max_allowed_extracted_documents == 0
+    assert usr.max_allowed_extractions == 0
+    assert usr.total_downloaded_bytes == 0
+    assert usr.total_extracted_documents == 0
+    assert usr.total_extractions == 0
+    assert usr.total_stream_instances == 0
+    assert usr.total_stream_subscriptions == 0
+    assert len(usr.enabled_company_identifiers) == 0
 
 
 def test_invalid_key():

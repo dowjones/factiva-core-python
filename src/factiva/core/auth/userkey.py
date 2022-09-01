@@ -98,10 +98,10 @@ class UserKey:
         if key is None:
             try:
                 key = load_environment_value('FACTIVA_USERKEY')
-            except Exception:
+            except Exception as error:
                 raise ValueError(
                     'Factiva user key not provided and environment variable FACTIVA_USERKEY not set.'
-                )
+                ) from error
 
         if len(key) != 32:
             raise ValueError('Factiva User-Key has the wrong length')
@@ -222,8 +222,8 @@ class UserKey:
                 self.total_stream_instances = resp_obj['data']['attributes']['tot_topics']
                 self.total_stream_subscriptions = resp_obj['data']['attributes']['tot_subscriptions']
                 self.enabled_company_identifiers = resp_obj['data']['attributes']['enabled_company_identifiers']
-            except Exception:
-                raise AttributeError('Unexpected Account Information API Response.')
+            except Exception as error:
+                raise AttributeError('Unexpected Account Information API Response.') from error
         elif resp.status_code == 403:
             raise ValueError('Factiva User-Key does not exist or inactive.')
         else:
@@ -261,15 +261,9 @@ class UserKey:
                 '''.format(req_head)
             raise RuntimeError(message)
         try:
-            # TODO: Keys without cloud credentials fail at this point. Need to imporove
-            #       exception handling and message.
             streaming_credentials_string = response.json()['data']['attributes']['streaming_credentials']
-        except TypeError:
-            raise ValueError(
-                '''
-                Unable to get a cloud token for the given key. This account might have limited access.
-                '''
-            )
+        except TypeError as type_error:
+            raise ValueError('Unable to get a cloud token for the given key. This account might have limited access.') from type_error
 
         self.cloud_token = json.loads(streaming_credentials_string)
         return True
@@ -404,7 +398,7 @@ class UserKey:
                 ids_df = stream_df['object_id'].str.split('-', expand=True)
                 stream_df['stream_id'] = ids_df[4]
                 stream_df['stream_type'] = ids_df[2]
-                stream_df['subscriptions'] = stream_df['data'].apply(lambda x: extract_subscriptions(x))
+                stream_df['subscriptions'] = stream_df['data'].apply(extract_subscriptions)
                 stream_df['n_subscriptions'] = stream_df['subscriptions'].str.len()
                 stream_df.drop(['self', 'type', 'data'], axis=1, inplace=True)
 
@@ -412,8 +406,8 @@ class UserKey:
                     stream_df = stream_df.loc[stream_df.job_status == const.API_JOB_RUNNING_STATE]
 
                 return stream_df
-            except Exception:
-                raise AttributeError('Unexpected Get Streams API Response.')
+            except Exception as error:
+                raise AttributeError('Unexpected Get Streams API Response.') from error
         elif response.status_code == 403:
             raise ValueError('Factiva API-Key does not exist or inactive.')
         else:
@@ -515,13 +509,13 @@ class UserKey:
         if isinstance(key, str):
             try:
                 return UserKey(key, stats=stats)
-            except Exception:
-                raise RuntimeError("User cannot be obtained from the provided key.")
+            except Exception as error:
+                raise RuntimeError("User cannot be obtained from the provided key.") from error
 
         if key is None:
             try:
                 return UserKey(stats=stats)
-            except Exception:
-                raise RuntimeError("User cannot be obtained from ENV variables")
+            except Exception as error:
+                raise RuntimeError("User cannot be obtained from ENV variables") from error
 
         raise RuntimeError("Unexpected api_user value")
