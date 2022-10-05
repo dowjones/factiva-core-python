@@ -451,6 +451,19 @@ class UserKey:
         print(account_streams.loc[:, account_streams.columns != 'object_id'])
 
 
+    def is_active(self) -> bool:
+        request_headers = {'user-key': self.key}
+        response = api_send_request(
+            method="GET",
+            endpoint_url=f'{const.API_HOST}{const.API_SNAPSHOTS_TAXONOMY_BASEPATH}',
+            headers=request_headers
+        )
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+
+
     def __print_property__(self, property_value) -> str:
         if isinstance(property_value, int):
             pval = f'{property_value:,d}'
